@@ -41,7 +41,43 @@ const WORD_BANK = {
   ]
 };
 
+const WORD_HINTS = {
+  panda: "Black and white bear.",
+  tiger: "A striped jungle cat.",
+  otter: "A playful animal that swims.",
+  zebra: "An animal with black and white stripes.",
+  rabbit: "A fluffy hopper with long ears.",
+  monkey: "Likes bananas.",
+  koala: "A sleepy tree climber from Australia.",
+  dolphin: "A smart animal that swims in the ocean.",
+  blue: "The color of the sky.",
+  green: "The color of grass.",
+  orange: "A fruit and a color.",
+  purple: "A royal color.",
+  yellow: "The color of the sun.",
+  silver: "A shiny metal color.",
+  indigo: "A deep blue-purple color.",
+  scarlet: "A bright red color.",
+  circle: "A round shape with no corners.",
+  square: "A shape with four equal sides.",
+  triangle: "A shape with three sides.",
+  oval: "A stretched-out circle.",
+  star: "A shape that shines in the night sky.",
+  heart: "A shape that means love.",
+  diamond: "A shape like a tilted square.",
+  crescent: "A moon-shaped curve.",
+  cookie: "A sweet baked treat.",
+  rocket: "It blasts into space.",
+  blanket: "Keeps you warm in bed.",
+  rainbow: "Many colors in the sky after rain.",
+  backpack: "You carry books in it.",
+  pencil: "You write with it.",
+  window: "You look through it.",
+  garden: "Flowers and plants grow there."
+};
+
 const CATEGORY_LABELS = {
+  random: "Random",
   animals: "Animals",
   colors: "Colors",
   shapes: "Shapes",
@@ -103,7 +139,7 @@ const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRec
 
 const state = {
   targetWord: "",
-  category: "animals",
+  category: "random",
   correctGuesses: [],
   wrongGuesses: [],
   remainingSplashes: 6,
@@ -142,6 +178,12 @@ function spritePath(index) {
 }
 
 function pickRandomWord(category) {
+  if (category === "random") {
+    const availableCategories = Object.keys(WORD_BANK);
+    const randomCategory = availableCategories[Math.floor(Math.random() * availableCategories.length)];
+    return pickRandomWord(randomCategory);
+  }
+
   const words = WORD_BANK[category];
   return words[Math.floor(Math.random() * words.length)];
 }
@@ -337,20 +379,22 @@ function speakMessage(message) {
 }
 
 function submitGuess(rawLetter, source = "manual") {
+  const shouldSpeakFeedback = source === "voice" || source === "manual";
+
   if (isGameOver()) {
-    setStatusMessage("Tap New Game to play again.", { speak: source === "voice" });
+    setStatusMessage("Tap New Game to play again.", { speak: shouldSpeakFeedback });
     return;
   }
 
   const letter = normalizeManualInput(rawLetter);
 
   if (!letter) {
-    setStatusMessage("Please guess one letter.", { speak: source === "voice" });
+    setStatusMessage("Please guess one letter.", { speak: shouldSpeakFeedback });
     return;
   }
 
   if (state.correctGuesses.includes(letter) || state.wrongGuesses.includes(letter)) {
-    setStatusMessage(`You already guessed ${letter.toUpperCase()}. Try a new letter.`, { speak: source === "voice" });
+    setStatusMessage(`You already guessed ${letter.toUpperCase()}. Try a new letter.`, { speak: shouldSpeakFeedback });
     return;
   }
 
@@ -361,7 +405,7 @@ function submitGuess(rawLetter, source = "manual") {
       state.status = "won";
       setStatusMessage(`Great job. You solved the word ${state.targetWord.toUpperCase()} and kept Botsly dry!`, { speak: true });
     } else {
-      setStatusMessage(`Nice guess. ${letter.toUpperCase()} is in the word.`, { speak: source === "voice" });
+      setStatusMessage(`Nice guess. ${letter.toUpperCase()} is in the word.`, { speak: shouldSpeakFeedback });
     }
   } else {
     state.wrongGuesses.push(letter);
@@ -371,7 +415,7 @@ function submitGuess(rawLetter, source = "manual") {
       state.status = "lost";
       setStatusMessage(`Splash! Botsly fell in. The word was ${state.targetWord.toUpperCase()}.`, { speak: true });
     } else {
-      setStatusMessage(`Oops. ${letter.toUpperCase()} is not in the word. Botsly looks more nervous.`, { speak: source === "voice" });
+      setStatusMessage(`Oops. ${letter.toUpperCase()} is not in the word. Botsly looks more nervous.`, { speak: shouldSpeakFeedback });
     }
   }
 
@@ -520,12 +564,14 @@ function handleManualGuess() {
 }
 
 function handleRepeat() {
-  if (!state.lastMessage) {
+  const hint = WORD_HINTS[state.targetWord];
+  if (!hint) {
+    setStatusMessage("No hint is ready for this word yet.");
     return;
   }
 
-  speakMessage(state.lastMessage);
-  setStatusMessage(state.lastMessage);
+  const hintMessage = `Hint: ${hint}`;
+  setStatusMessage(hintMessage, { speak: true });
 }
 
 function bindEvents() {

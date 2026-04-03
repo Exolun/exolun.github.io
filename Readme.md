@@ -1,21 +1,55 @@
-# :wrench: Michael Smith's Engineering Portfolio Website
+# Resume Site
 
-Hello there! :wave: This is the placeholder README file for the website portfolio of **Michael Smith**, an experienced engineer.
+This workspace now contains a dependency-free static resume site that can be hosted on GitHub Pages.
 
-## :bookmark_tabs: Overview
+## Files
 
-This portfolio will contain information about Michael's engineering projects, work experience, achievements, and professional interests.
+- `index.html`: page structure
+- `styles.css`: layout and visual styling
+- `app.js`: client-side renderer
+- `resume-data.js`: the resume content source you will edit most often
 
-## :construction: Work in Progress
+## Local iteration
 
-Please note that this repository is currently under development. More updates and contents will be added soon to showcase Michael's professional journey in the field of engineering.
+For content-only changes, edit `resume-data.js` and refresh the page.
 
-## :raising_hand: Contributions
+You can preview the site in either of these ways:
 
-For the moment, this repository isn't open to contributions. However, you're welcome to explore the codebase and use it as a reference.
+1. Open `index.html` directly in a browser.
+2. Run a local static server from this folder, for example:
 
-## :email: Contact
+```powershell
+python -m http.server 8000
+```
 
-Should you need to get in touch with Michael, please drop an email at [mike@mikelikescoding.com](mailto:mike@mikelikescoding.com).
+Then open `http://localhost:8000`.
 
-Stay tuned for more updates. Thank you for your interest and understanding! :blush:
+## GitHub Pages setup
+
+For a personal GitHub Pages site:
+
+1. Create a repository named `YOUR_GITHUB_USERNAME.github.io`.
+2. Copy these files into that repository.
+3. Push to the `main` branch.
+4. In GitHub, open `Settings` -> `Pages`.
+5. Set the source to `Deploy from a branch`.
+6. Choose `main` and `/ (root)`.
+7. Save, then wait for GitHub to publish the site.
+
+Your resume will then be available at:
+
+`https://YOUR_GITHUB_USERNAME.github.io/`
+
+## How we should iterate
+
+The intended workflow is:
+
+1. Keep layout changes in `styles.css` and `index.html`.
+2. Keep wording changes in `resume-data.js`.
+3. Update the data structure first whenever you want to revise bullets, projects, skills, or education.
+
+If you want, the next step can be either:
+
+- converting this into a more formal one-page resume presentation
+- adding a printable PDF-oriented variant
+- adding sections for contact links, certifications, or selected achievements

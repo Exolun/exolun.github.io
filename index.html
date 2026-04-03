@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Resume site for Michael Smith, Software Engineer II at Microsoft focused on AI systems, developer tooling, and full-stack engineering.">
+  <title>Michael Smith | Resume</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow" id="hero-location"></p>
+        <h1 id="hero-name"></h1>
+        <p class="hero-title" id="hero-headline"></p>
+        <p class="hero-summary" id="hero-summary"></p>
+      </div>
+      <aside class="hero-card">
+        <div class="hero-card-section">
+          <p class="card-label">Current role</p>
+          <p class="card-value" id="hero-role"></p>
+        </div>
+        <div class="hero-card-section">
+          <p class="card-label">Focus</p>
+          <ul class="tag-list" id="hero-focus"></ul>
+        </div>
+        <div class="hero-card-section">
+          <p class="card-label">Links</p>
+          <ul class="link-list" id="hero-links"></ul>
+        </div>
+      </aside>
+    </header>
+
+    <main class="content-grid">
+      <section class="content-panel section-summary">
+        <h2>Profile</h2>
+        <div id="profile-points" class="bullet-list"></div>
+      </section>
+
+      <section class="content-panel section-experience">
+        <h2>Experience</h2>
+        <div id="experience-list" class="timeline"></div>
+      </section>
+
+      <section class="content-panel section-projects">
+        <h2>Selected Projects</h2>
+        <div id="project-list" class="stack-list"></div>
+      </section>
+
+      <section class="content-panel section-skills">
+        <h2>Skills</h2>
+        <div id="skill-groups" class="skill-groups"></div>
+      </section>
+
+      <section class="content-panel section-education">
+        <h2>Education</h2>
+        <div id="education-list" class="stack-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="resume-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

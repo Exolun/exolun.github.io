@@ -1,16 +1,17 @@
 :root {
-  --bg: #f5efe3;
-  --bg-accent: #e8dcc1;
-  --panel: rgba(255, 250, 241, 0.88);
-  --panel-strong: rgba(255, 248, 236, 0.96);
-  --text: #1f1b16;
-  --muted: #5f574f;
-  --soft: #867a70;
-  --line: rgba(77, 57, 34, 0.14);
-  --accent: #0b6b73;
-  --accent-strong: #084f55;
-  --accent-warm: #b55a3c;
-  --shadow: 0 20px 60px rgba(39, 28, 14, 0.12);
+  --bg: #09111f;
+  --bg-accent: #132038;
+  --panel: rgba(13, 20, 34, 0.84);
+  --panel-strong: rgba(16, 24, 40, 0.94);
+  --panel-soft: rgba(20, 31, 52, 0.78);
+  --text: #edf4ff;
+  --muted: #b8c8df;
+  --soft: #7f90ab;
+  --line: rgba(123, 134, 168, 0.24);
+  --accent: #33d1ff;
+  --accent-strong: #92ecff;
+  --accent-warm: #58b7ff;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
   --radius: 22px;
   --radius-sm: 14px;
   --content-width: 1360px;
@@ -32,9 +33,10 @@ body {
   font-family: var(--body-font);
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(11, 107, 115, 0.16), transparent 28%),
-    radial-gradient(circle at 85% 12%, rgba(181, 90, 60, 0.18), transparent 24%),
-    linear-gradient(180deg, #fbf6ea 0%, #f3ead9 46%, #efe5d5 100%);
+    radial-gradient(circle at top left, rgba(51, 209, 255, 0.18), transparent 24%),
+    radial-gradient(circle at 88% 10%, rgba(88, 183, 255, 0.14), transparent 18%),
+    radial-gradient(circle at 50% 100%, rgba(23, 39, 68, 0.5), transparent 28%),
+    linear-gradient(180deg, #0d1423 0%, #0a101d 52%, #070c16 100%);
 }
 
 body::before {
@@ -43,10 +45,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 70%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 72%);
 }
 
 .page-shell {
@@ -76,6 +78,9 @@ body::before {
 
 .hero-copy {
   padding: 38px 34px 34px;
+  background:
+    linear-gradient(135deg, rgba(51, 209, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(17, 28, 46, 0.96), rgba(11, 18, 31, 0.92));
 }
 
 .eyebrow {
@@ -120,7 +125,7 @@ h1 {
 .hero-card {
   padding: 26px 24px;
   background:
-    linear-gradient(180deg, rgba(255, 247, 235, 0.97), rgba(245, 235, 219, 0.92)),
+    linear-gradient(180deg, rgba(22, 33, 55, 0.98), rgba(12, 19, 32, 0.96)),
     var(--panel-strong);
 }
 
@@ -167,9 +172,9 @@ h1 {
 .chip-list li {
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(11, 107, 115, 0.09);
+  background: rgba(51, 209, 255, 0.08);
   color: var(--accent-strong);
-  border: 1px solid rgba(11, 107, 115, 0.16);
+  border: 1px solid rgba(51, 209, 255, 0.22);
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -284,7 +289,7 @@ h2 {
   height: 10px;
   border-radius: 50%;
   background: var(--accent-warm);
-  box-shadow: 0 0 0 5px rgba(181, 90, 60, 0.14);
+  box-shadow: 0 0 0 5px rgba(88, 183, 255, 0.16);
 }
 
 .timeline {
@@ -297,7 +302,7 @@ h2 {
 .skill-group {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: rgba(255, 252, 246, 0.82);
+  background: var(--panel-soft);
 }
 
 .timeline-entry {
@@ -393,6 +398,29 @@ h2 {
 .skill-group h3 {
   margin: 0 0 14px;
   font-size: 1.08rem;
+}
+
+.hero-copy,
+.hero-card,
+.content-panel,
+.timeline-entry,
+.stack-entry,
+.skill-group {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-copy::after,
+.hero-card::after,
+.content-panel::after,
+.timeline-entry::after,
+.stack-entry::after,
+.skill-group::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 38%);
 }
 
 @keyframes rise {

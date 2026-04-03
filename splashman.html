@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Splashman is a kid-friendly mobile word guessing game with tap-to-talk voice input and manual letter guessing.">
+  <title>Splashman</title>
+  <link rel="stylesheet" href="splashman.css">
+</head>
+<body>
+  <main class="game-app" id="gameApp" data-state="idle">
+    <section class="panel play-panel" aria-labelledby="wordHeading">
+      <div class="play-header">
+        <div class="play-title-block">
+          <a class="home-link home-link-inline" href="index.html">Back to Home</a>
+          <p class="eyebrow eyebrow-play">Splashman</p>
+          <h2 id="wordHeading">Keep Botsly Dry</h2>
+          <p class="section-copy">
+            Wrong guesses make Botsly more nervous.
+          </p>
+        </div>
+        <div class="header-meta">
+          <label class="category-picker" for="categorySelect">
+            <span class="category-picker-label">Category</span>
+            <select id="categorySelect" class="category-select" aria-label="Choose word category"></select>
+          </label>
+        </div>
+        <div class="header-actions">
+          <button class="action-button top-action" id="newGameButton" type="button">New Game</button>
+          <button class="action-button action-button-secondary top-action" id="repeatButton" type="button">Repeat Hint</button>
+        </div>
+      </div>
+
+      <div class="scene-card">
+        <div class="scene-meta">
+          <div>
+            <p class="meter-label">Botsly Mood</p>
+            <p class="mood-text" id="moodText"></p>
+          </div>
+          <div class="chance-pill" id="chanceText"></div>
+        </div>
+
+        <div class="stage-scene" id="stageScene" data-frame="1">
+          <div class="cloud cloud-a"></div>
+          <div class="cloud cloud-b"></div>
+          <div class="cloud cloud-c"></div>
+          <img class="botsly-sprite" id="botslySprite" alt="Botsly on the platform">
+          <div class="platform-shadow"></div>
+          <div class="platform"></div>
+          <div class="water">
+            <div class="wave wave-a"></div>
+            <div class="wave wave-b"></div>
+            <div class="wave wave-c"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="word-display" id="wordDisplay" aria-live="polite"></div>
+
+      <div class="status-strip">
+        <div class="wrong-card">
+          <p class="meter-label">Miss Meter</p>
+          <div class="mistake-meter" id="mistakeMeter" aria-live="polite"></div>
+          <div class="wrong-guesses" id="wrongGuesses" aria-live="polite"></div>
+        </div>
+
+        <div class="message-card">
+          <p class="meter-label">Coach</p>
+          <p class="status-message" id="statusMessage" aria-live="polite"></p>
+          <p class="transcript" id="lastTranscript" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel controls-panel">
+      <div class="controls-grid">
+        <div class="voice-panel">
+          <div class="section-head section-head-tight">
+            <h2>Tap to Talk</h2>
+            <p class="section-copy" id="voiceHint"></p>
+          </div>
+
+          <button class="talk-button" id="talkButton" type="button">
+            <span class="talk-button-main">Tap to Talk</span>
+            <span class="talk-button-sub">Say one letter like "B" or "guess D"</span>
+          </button>
+        </div>
+
+        <div class="manual-panel">
+          <div class="section-head section-head-tight">
+            <h2>Type a Letter</h2>
+            <p class="section-copy">Manual play always works.</p>
+          </div>
+
+          <div class="manual-controls">
+            <label class="sr-only" for="letterInput">Type one letter</label>
+            <input
+              id="letterInput"
+              class="letter-input"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              maxlength="1"
+              placeholder="A"
+            >
+            <button class="guess-button" id="guessButton" type="button">Guess</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="splashman.js"></script>
+</body>
+</html>

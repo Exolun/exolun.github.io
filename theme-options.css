@@ -1,0 +1,332 @@
+:root {
+  --page-bg: #ebe7de;
+  --frame: rgba(42, 34, 26, 0.12);
+  --text: #1c1712;
+  --muted: #645c54;
+  --shadow: 0 18px 50px rgba(24, 18, 12, 0.12);
+  --display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  --body-font: "Aptos", "Segoe UI Variable Text", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--body-font);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(51, 88, 111, 0.16), transparent 24%),
+    linear-gradient(180deg, #f5f2ea 0%, var(--page-bg) 100%);
+}
+
+.theme-gallery {
+  width: min(100% - 32px, 1380px);
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+  padding: 28px 30px;
+  border: 1px solid var(--frame);
+  border-radius: 28px;
+  background: rgba(255, 252, 247, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow,
+.theme-label,
+.mockup-location,
+.mockup-kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--display-font);
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  margin-top: 10px;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+}
+
+.page-copy {
+  max-width: 70ch;
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.theme-card {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 30px;
+  border: 1px solid var(--frame);
+  box-shadow: var(--shadow);
+}
+
+.theme-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.theme-meta h2 {
+  margin-top: 6px;
+  font-size: 2rem;
+}
+
+.theme-summary {
+  max-width: 32ch;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.swatches span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.58);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.swatches span::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mockup {
+  padding: 14px;
+  border-radius: 24px;
+}
+
+.mockup-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(260px, 0.9fr);
+  gap: 18px;
+}
+
+.mockup-copy,
+.mockup-side {
+  border-radius: 22px;
+  padding: 24px;
+}
+
+.mockup-copy h3 {
+  margin-top: 8px;
+  font-size: clamp(2rem, 3vw, 3.8rem);
+  line-height: 0.94;
+}
+
+.mockup-headline {
+  margin: 16px 0 0;
+  max-width: 24ch;
+  font-size: clamp(1.14rem, 1.8vw, 1.55rem);
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.mockup-body {
+  max-width: 60ch;
+  margin: 18px 0 0;
+  line-height: 1.72;
+}
+
+.chips {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chips li {
+  padding: 9px 13px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.theme-editorial {
+  background: linear-gradient(180deg, #f8f5ee 0%, #f0eadf 100%);
+}
+
+.theme-editorial .theme-label,
+.theme-editorial .mockup-location,
+.theme-editorial .mockup-kicker {
+  color: #1d4e89;
+}
+
+.theme-editorial .theme-summary {
+  color: #3d352c;
+}
+
+.theme-editorial .mockup {
+  background: rgba(255, 250, 242, 0.8);
+}
+
+.theme-editorial .mockup-copy,
+.theme-editorial .mockup-side {
+  background: #f8f4eb;
+  border: 1px solid rgba(31, 27, 22, 0.1);
+}
+
+.theme-editorial .mockup-copy h3,
+.theme-editorial .mockup-headline {
+  color: #171717;
+}
+
+.theme-editorial .mockup-body {
+  color: #4b4339;
+}
+
+.theme-editorial .chips li {
+  color: #1d4e89;
+  background: rgba(29, 78, 137, 0.08);
+  border: 1px solid rgba(29, 78, 137, 0.18);
+}
+
+.theme-teal {
+  background:
+    radial-gradient(circle at top right, rgba(191, 109, 67, 0.1), transparent 25%),
+    linear-gradient(180deg, #f3f4ef 0%, #e8ebe3 100%);
+}
+
+.theme-teal .theme-label,
+.theme-teal .mockup-location,
+.theme-teal .mockup-kicker {
+  color: #bf6d43;
+}
+
+.theme-teal .theme-summary {
+  color: #29444a;
+}
+
+.theme-teal .mockup {
+  background: rgba(247, 243, 234, 0.72);
+}
+
+.theme-teal .mockup-copy,
+.theme-teal .mockup-side {
+  background: #f7f3ea;
+  border: 1px solid rgba(18, 61, 70, 0.11);
+}
+
+.theme-teal .mockup-copy h3,
+.theme-teal .mockup-headline {
+  color: #123d46;
+}
+
+.theme-teal .mockup-body {
+  color: #4f5b5d;
+}
+
+.theme-teal .chips li {
+  color: #123d46;
+  background: rgba(18, 61, 70, 0.08);
+  border: 1px solid rgba(18, 61, 70, 0.16);
+}
+
+.theme-midnight {
+  background:
+    radial-gradient(circle at top left, rgba(51, 209, 255, 0.12), transparent 28%),
+    linear-gradient(180deg, #111827 0%, #0c1220 100%);
+  color: #eaf2ff;
+}
+
+.theme-midnight .theme-label,
+.theme-midnight .mockup-location,
+.theme-midnight .mockup-kicker {
+  color: #33d1ff;
+}
+
+.theme-midnight .theme-summary {
+  color: #b7c6e3;
+}
+
+.theme-midnight .swatches span {
+  background: rgba(255, 255, 255, 0.06);
+  color: #eaf2ff;
+  border-color: rgba(234, 242, 255, 0.12);
+}
+
+.theme-midnight .swatches span::before {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.theme-midnight .mockup {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.theme-midnight .mockup-copy,
+.theme-midnight .mockup-side {
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(123, 134, 168, 0.22);
+}
+
+.theme-midnight .mockup-copy h3,
+.theme-midnight .mockup-headline {
+  color: #f5f9ff;
+}
+
+.theme-midnight .mockup-body {
+  color: #b7c6e3;
+}
+
+.theme-midnight .chips li {
+  color: #9ce6ff;
+  background: rgba(51, 209, 255, 0.08);
+  border: 1px solid rgba(51, 209, 255, 0.22);
+}
+
+@media (max-width: 900px) {
+  .theme-meta,
+  .mockup-hero {
+    grid-template-columns: 1fr;
+    display: grid;
+    align-items: start;
+  }
+}
+
+@media (max-width: 700px) {
+  .theme-gallery {
+    width: min(100% - 18px, 1380px);
+    padding-top: 18px;
+  }
+
+  .page-header,
+  .theme-card,
+  .mockup-copy,
+  .mockup-side {
+    padding: 20px;
+  }
+}

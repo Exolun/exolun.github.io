@@ -16,6 +16,10 @@ window.resumeData = {
       {
         label: "LinkedIn",
         href: "https://www.linkedin.com/in/michael-smith-aa573324/"
+      },
+      {
+        label: "Kid Stuff",
+        href: "splashman.html"
       }
     ]
   },

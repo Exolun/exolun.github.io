@@ -31,8 +31,13 @@ function renderBasics(basics) {
     const a = document.createElement("a");
     a.href = item.href;
     a.textContent = item.label;
-    a.target = "_blank";
-    a.rel = "noreferrer";
+
+    const isExternalLink = /^https?:\/\//i.test(item.href);
+    if (isExternalLink) {
+      a.target = "_blank";
+      a.rel = "noreferrer";
+    }
+
     li.appendChild(a);
     links.appendChild(li);
   });

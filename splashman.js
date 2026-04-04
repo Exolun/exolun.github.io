@@ -423,6 +423,10 @@ function hasGuessedAlready(guess) {
   return state.correctGuesses.includes(guess) || state.wrongGuesses.includes(guess);
 }
 
+function revealWholeWord() {
+  state.correctGuesses = [...new Set(state.targetWord)];
+}
+
 function applyWrongGuess(guess, shouldSpeakFeedback) {
   state.wrongGuesses.push(guess);
   state.remainingSplashes -= 1;
@@ -592,6 +596,7 @@ function submitGuess(rawGuess, source = "manual") {
     }
   } else {
     if (guess === state.targetWord) {
+      revealWholeWord();
       state.status = "won";
       setStatusMessage(`Amazing. You solved the word ${state.targetWord.toUpperCase()} and kept Botsly dry!`, { speak: true });
     } else {

@@ -200,6 +200,10 @@ h2 {
   gap: 8px;
 }
 
+.action-label {
+  display: inline-block;
+}
+
 .category-button,
 .action-button,
 .guess-button,
@@ -457,6 +461,10 @@ h2 {
   margin-top: 8px;
 }
 
+.controls-grid {
+  grid-template-columns: 1fr;
+}
+
 .wrong-card,
 .message-card {
   border-radius: var(--radius-lg);
@@ -537,16 +545,44 @@ h2 {
   margin-bottom: 8px;
 }
 
+.manual-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .talk-button {
-  width: 100%;
-  min-height: 84px;
-  padding: 12px 12px;
-  border-radius: 20px;
+  border-radius: 16px;
   background:
     radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.22), transparent 24%),
     linear-gradient(180deg, #ff925f 0%, #ff7a59 54%, #ef4d3a 100%);
   color: white;
-  box-shadow: 0 16px 28px rgba(239, 77, 58, 0.28);
+  box-shadow: 0 12px 20px rgba(239, 77, 58, 0.22);
+}
+
+.talk-button-inline {
+  min-height: 42px;
+  min-width: 118px;
+  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.talk-button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .talk-button-main,
@@ -555,13 +591,12 @@ h2 {
 }
 
 .talk-button-main {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-size: 0.92rem;
   font-weight: 900;
 }
 
 .talk-button-sub {
-  margin-top: 4px;
-  font-size: 0.84rem;
+  font-size: 0.72rem;
   font-weight: 700;
   opacity: 0.96;
 }
@@ -705,9 +740,12 @@ h2 {
 }
 
 @media (min-width: 700px) {
-  .status-strip,
-  .controls-grid {
+  .status-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .controls-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .play-header {
@@ -715,9 +753,40 @@ h2 {
     grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: start;
   }
+
+  .manual-title-row {
+    align-items: start;
+  }
+
+  .talk-button-inline {
+    min-width: 148px;
+    min-height: 44px;
+    padding: 8px 12px;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .talk-button-inline .talk-button-main,
+  .talk-button-inline .talk-button-sub {
+    display: block;
+  }
+
+  .talk-button-inline .talk-button-sub {
+    margin-top: 2px;
+    font-size: 0.74rem;
+  }
 }
 
 @media (max-width: 560px) {
+  .game-app {
+    padding-top: 4px;
+    gap: 6px;
+  }
+
+  .panel {
+    padding: 10px;
+  }
+
   .play-header,
   .scene-meta {
     align-items: start;
@@ -725,23 +794,198 @@ h2 {
   }
 
   .play-title-block {
-    order: 2;
+    order: 3;
     width: 100%;
   }
 
-  .header-actions,
-  .header-meta,
-  .top-action,
-  .chance-pill {
-    width: 100%;
+  .play-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    align-items: start;
+  }
+
+  .header-meta {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    align-self: start;
   }
 
   .header-actions {
-    display: grid;
-    grid-template-columns: 1fr;
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    align-self: end;
+    padding-top: 14px;
+  }
+
+  .top-action {
+    min-width: 40px;
+    width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 14px;
+    font-size: 0;
+  }
+
+  #newGameButton::before {
+    content: "+";
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  #repeatButton::before {
+    content: "?";
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .header-meta,
+  .category-picker,
+  .category-select {
+    width: 100%;
+  }
+
+  .category-picker-label {
+    font-size: 0.58rem;
+  }
+
+  .category-select {
+    min-height: 34px;
+    padding-block: 5px;
+  }
+
+  .home-link-inline {
+    font-size: 0.82rem;
+  }
+
+  .eyebrow-play {
+    font-size: 0.58rem;
+  }
+
+  #wordHeading {
+    font-size: 1.02rem;
+  }
+
+  .section-copy {
+    font-size: 0.86rem;
+  }
+
+  .scene-card {
+    margin-top: 6px;
+    padding: 8px;
+  }
+
+  .mood-text {
+    font-size: 0.9rem;
+  }
+
+  .chance-pill {
+    width: auto;
+    padding: 5px 8px;
+    font-size: 0.78rem;
   }
 
   .stage-scene {
-    height: clamp(232px, 31vh, 272px);
+    height: clamp(190px, 24vh, 228px);
+  }
+
+  .botsly-sprite {
+    width: min(46vw, 210px);
+    bottom: 78px;
+  }
+
+  .platform-shadow {
+    bottom: 56px;
+    width: min(44vw, 180px);
+  }
+
+  .platform {
+    bottom: 68px;
+    width: min(48vw, 196px);
+    height: 18px;
+  }
+
+  .water {
+    height: 74px;
+  }
+
+  .word-display {
+    min-height: 48px;
+    margin-top: 6px;
+  }
+
+  .letter-box {
+    width: 36px;
+    height: 46px;
+    font-size: 1.26rem;
+    border-radius: 12px;
+  }
+
+  .letter-box.is-hidden::after {
+    width: 18px;
+    bottom: 8px;
+  }
+
+  .status-strip,
+  .controls-grid {
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .wrong-card,
+  .message-card {
+    padding: 8px;
+  }
+
+  .mistake-meter {
+    margin-bottom: 6px;
+  }
+
+  .controls-panel {
+    justify-content: flex-start;
+  }
+
+  .manual-title-row {
+    gap: 8px;
+    align-items: center;
+  }
+
+  .talk-button-inline {
+    min-width: 44px;
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 14px;
+    gap: 0;
+    flex: 0 0 auto;
+  }
+
+  .talk-button-icon {
+    width: 22px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .talk-button-inline .talk-button-main,
+  .talk-button-inline .talk-button-sub {
+    display: none;
+  }
+
+  .letter-input,
+  .guess-button {
+    min-height: 40px;
+  }
+
+  .letter-input {
+    font-size: 1.2rem;
+  }
+
+  .guess-button {
+    font-size: 0.88rem;
   }
 }

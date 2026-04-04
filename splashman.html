@@ -26,8 +26,12 @@
           </label>
         </div>
         <div class="header-actions">
-          <button class="action-button top-action" id="newGameButton" type="button">New Game</button>
-          <button class="action-button action-button-secondary top-action" id="repeatButton" type="button">Give Hint</button>
+          <button class="action-button top-action" id="newGameButton" type="button" aria-label="New Game">
+            <span class="action-label">New Game</span>
+          </button>
+          <button class="action-button action-button-secondary top-action" id="repeatButton" type="button" aria-label="Give Hint">
+            <span class="action-label">Give Hint</span>
+          </button>
         </div>
       </div>
 
@@ -74,22 +78,17 @@
 
     <section class="panel controls-panel">
       <div class="controls-grid">
-        <div class="voice-panel">
-          <div class="section-head section-head-tight">
-            <h2>Tap to Talk</h2>
-            <p class="section-copy" id="voiceHint"></p>
-          </div>
-
-          <button class="talk-button" id="talkButton" type="button">
-            <span class="talk-button-main">Tap to Talk</span>
-            <span class="talk-button-sub">Say one letter like "B" or "guess D"</span>
-          </button>
-        </div>
-
         <div class="manual-panel">
           <div class="section-head section-head-tight">
-            <h2>Type a Letter</h2>
-            <p class="section-copy">Manual play always works.</p>
+            <div class="manual-title-row">
+              <h2>Guess a Letter</h2>
+              <button class="talk-button talk-button-inline" id="talkButton" type="button" aria-label="Tap to Talk">
+                <span class="talk-button-icon" aria-hidden="true">Mic</span>
+                <span class="talk-button-main">Tap to Talk</span>
+                <span class="talk-button-sub">Speak</span>
+              </button>
+            </div>
+            <p class="section-copy" id="voiceHint">Tap the mic or type a letter below.</p>
           </div>
 
           <div class="manual-controls">

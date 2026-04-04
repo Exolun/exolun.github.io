@@ -891,27 +891,27 @@ h2 {
   }
 
   .stage-scene {
-    height: clamp(190px, 24vh, 228px);
+    height: clamp(214px, 28vh, 244px);
   }
 
   .botsly-sprite {
-    width: min(46vw, 210px);
-    bottom: 78px;
+    width: min(43vw, 188px);
+    bottom: 66px;
   }
 
   .platform-shadow {
-    bottom: 56px;
+    bottom: 48px;
     width: min(44vw, 180px);
   }
 
   .platform {
-    bottom: 68px;
+    bottom: 58px;
     width: min(48vw, 196px);
     height: 18px;
   }
 
   .water {
-    height: 74px;
+    height: 72px;
   }
 
   .word-display {

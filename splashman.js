@@ -109,6 +109,8 @@ const LETTER_ALIASES = {
 const FILLER_WORDS = new Set([
   "guess",
   "letter",
+  "word",
+  "solve",
   "my",
   "is",
   "the",
@@ -247,7 +249,7 @@ function startNewGame(options = {}) {
   state.status = "playing";
   state.lastTranscript = "";
 
-  const message = `New game. ${CATEGORY_LABELS[state.category]}. Say one letter or type one letter to help Botsly stay dry.`;
+  const message = `New game. ${CATEGORY_LABELS[state.category]}. Say or type a guess to help Botsly stay dry.`;
   setStatusMessage(message, { speak });
   render();
   focusLetterInput({ source: "new-game" });
@@ -277,8 +279,38 @@ function focusLetterInput(options = {}) {
   els.letterInput.focus({ preventScroll: true });
 }
 
-function normalizeManualInput(value) {
-  return value.toLowerCase().replace(/[^a-z]/g, "").slice(0, 1);
+function normalizeGuessInput(value) {
+  return value.toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function displayGuess(guess) {
+  return guess.toUpperCase();
+}
+
+function isLetterGuess(guess) {
+  return guess.length === 1;
+}
+
+function hasGuessedAlready(guess) {
+  return state.correctGuesses.includes(guess) || state.wrongGuesses.includes(guess);
+}
+
+function applyWrongGuess(guess, shouldSpeakFeedback) {
+  state.wrongGuesses.push(guess);
+  state.remainingSplashes -= 1;
+
+  if (isGameLost()) {
+    state.status = "lost";
+    setStatusMessage(`Splash! Botsly fell in. The word was ${state.targetWord.toUpperCase()}.`, { speak: true });
+    return;
+  }
+
+  if (isLetterGuess(guess)) {
+    setStatusMessage(`Oops. ${displayGuess(guess)} is not in the word. Botsly looks more nervous.`, { speak: shouldSpeakFeedback });
+    return;
+  }
+
+  setStatusMessage(`Not this time. ${displayGuess(guess)} is not the word. Botsly looks more nervous.`, { speak: shouldSpeakFeedback });
 }
 
 function render() {
@@ -352,19 +384,19 @@ function renderStatus() {
 
 function renderVoiceState() {
   if (state.voiceAvailable) {
-    els.voiceHint.textContent = "Voice works best on a secure site. Tap once and say a single letter.";
+    els.voiceHint.textContent = "Voice works best on a secure site. Tap once and say a letter or the whole word.";
     els.talkButton.disabled = isGameOver();
     els.talkButton.querySelector(".talk-button-main").textContent = state.listening ? "Listening..." : "Tap to Talk";
     els.talkButton.querySelector(".talk-button-sub").textContent = state.listening
-      ? "Say one letter now"
-      : "Say one letter like \"B\" or \"guess D\"";
+      ? "Say your guess now"
+      : "Say a letter or solve the word";
     return;
   }
 
   els.voiceHint.textContent = "Voice input is not available on this browser or connection. You can still play by typing.";
   els.talkButton.disabled = true;
   els.talkButton.querySelector(".talk-button-main").textContent = "Voice Unavailable";
-  els.talkButton.querySelector(".talk-button-sub").textContent = "Type one letter below instead";
+  els.talkButton.querySelector(".talk-button-sub").textContent = "Type your guess below instead";
 }
 
 function renderControlState() {
@@ -396,7 +428,7 @@ function speakMessage(message) {
   window.speechSynthesis.speak(utterance);
 }
 
-function submitGuess(rawLetter, source = "manual") {
+function submitGuess(rawGuess, source = "manual") {
   const shouldSpeakFeedback = source === "voice" || source === "manual";
 
   if (isGameOver()) {
@@ -404,36 +436,38 @@ function submitGuess(rawLetter, source = "manual") {
     return;
   }
 
-  const letter = normalizeManualInput(rawLetter);
+  const guess = normalizeGuessInput(rawGuess);
 
-  if (!letter) {
-    setStatusMessage("Please guess one letter.", { speak: shouldSpeakFeedback });
+  if (!guess) {
+    setStatusMessage("Please enter a guess.", { speak: shouldSpeakFeedback });
     return;
   }
 
-  if (state.correctGuesses.includes(letter) || state.wrongGuesses.includes(letter)) {
-    setStatusMessage(`You already guessed ${letter.toUpperCase()}. Try a new letter.`, { speak: shouldSpeakFeedback });
+  if (hasGuessedAlready(guess)) {
+    setStatusMessage(`You already guessed ${displayGuess(guess)}. Try something new.`, { speak: shouldSpeakFeedback });
     return;
   }
 
-  if (state.targetWord.includes(letter)) {
-    state.correctGuesses.push(letter);
+  if (isLetterGuess(guess)) {
+    if (state.targetWord.includes(guess)) {
+      state.correctGuesses.push(guess);
 
-    if (isGameWon()) {
-      state.status = "won";
-      setStatusMessage(`Great job. You solved the word ${state.targetWord.toUpperCase()} and kept Botsly dry!`, { speak: true });
+      if (isGameWon()) {
+        state.status = "won";
+        setStatusMessage(`Great job. You solved the word ${state.targetWord.toUpperCase()} and kept Botsly dry!`, { speak: true });
+      } else {
+        setStatusMessage(`Nice guess. ${displayGuess(guess)} is in the word.`, { speak: shouldSpeakFeedback });
+      }
+
     } else {
-      setStatusMessage(`Nice guess. ${letter.toUpperCase()} is in the word.`, { speak: shouldSpeakFeedback });
+      applyWrongGuess(guess, shouldSpeakFeedback);
     }
   } else {
-    state.wrongGuesses.push(letter);
-    state.remainingSplashes -= 1;
-
-    if (isGameLost()) {
-      state.status = "lost";
-      setStatusMessage(`Splash! Botsly fell in. The word was ${state.targetWord.toUpperCase()}.`, { speak: true });
+    if (guess === state.targetWord) {
+      state.status = "won";
+      setStatusMessage(`Amazing. You solved the word ${state.targetWord.toUpperCase()} and kept Botsly dry!`, { speak: true });
     } else {
-      setStatusMessage(`Oops. ${letter.toUpperCase()} is not in the word. Botsly looks more nervous.`, { speak: shouldSpeakFeedback });
+      applyWrongGuess(guess, shouldSpeakFeedback);
     }
   }
 
@@ -454,7 +488,7 @@ function isGameOver() {
   return state.status === "won" || state.status === "lost";
 }
 
-function parseTranscriptToLetter(transcript) {
+function parseTranscriptToGuess(transcript) {
   const cleaned = transcript
     .toLowerCase()
     .replace(/[^a-z\s]/g, " ")
@@ -464,51 +498,70 @@ function parseTranscriptToLetter(transcript) {
   if (!cleaned) {
     return {
       success: false,
-      letter: "",
-      reason: "I did not hear a letter."
+      guess: "",
+      reason: "I did not hear a guess."
     };
   }
 
   if (/^[a-z]$/.test(cleaned)) {
     return {
       success: true,
-      letter: cleaned,
+      guess: cleaned,
       reason: ""
     };
   }
 
-  const tokens = cleaned.split(" ").filter(Boolean);
-  const candidates = [];
+  const tokens = cleaned
+    .split(" ")
+    .filter(Boolean)
+    .filter((token) => !FILLER_WORDS.has(token));
 
-  tokens.forEach((token) => {
-    if (FILLER_WORDS.has(token)) {
-      return;
-    }
+  if (!tokens.length) {
+    return {
+      success: false,
+      guess: "",
+      reason: "Please say a letter or the whole word, or type it below."
+    };
+  }
 
+  const normalizedTokens = tokens.map((token) => {
     if (/^[a-z]$/.test(token)) {
-      candidates.push(token);
-      return;
+      return token;
     }
 
-    if (LETTER_ALIASES[token]) {
-      candidates.push(LETTER_ALIASES[token]);
-    }
+    return LETTER_ALIASES[token] || token;
   });
 
-  const uniqueCandidates = [...new Set(candidates)];
-
-  if (uniqueCandidates.length === 1) {
+  if (normalizedTokens.length === 1) {
     return {
       success: true,
-      letter: uniqueCandidates[0],
+      guess: normalizedTokens[0],
+      reason: ""
+    };
+  }
+
+  const uniqueCandidates = [...new Set(normalizedTokens)];
+
+  if (uniqueCandidates.length === 1 && uniqueCandidates[0].length === 1) {
+    return {
+      success: true,
+      guess: uniqueCandidates[0],
+      reason: ""
+    };
+  }
+
+  if (normalizedTokens.every((token) => /^[a-z]+$/.test(token) && token.length > 1)) {
+    return {
+      success: true,
+      guess: normalizedTokens.join(""),
       reason: ""
     };
   }
 
   return {
     success: false,
-    letter: "",
-    reason: "Please say exactly one letter, or type it below."
+    guess: "",
+    reason: "Please say a letter or the whole word, or type it below."
   };
 }
 
@@ -543,7 +596,7 @@ function startVoiceRecognition() {
   state.lastTranscript = "";
   state.status = isGameOver() ? state.status : "playing";
   render();
-  setStatusMessage("Listening for one letter...");
+  setStatusMessage("Listening for your guess...");
 
   recognition.lang = "en-US";
   recognition.interimResults = false;
@@ -553,7 +606,7 @@ function startVoiceRecognition() {
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript || "";
     state.lastTranscript = transcript.trim();
-    const parsed = parseTranscriptToLetter(transcript);
+    const parsed = parseTranscriptToGuess(transcript);
     stopRecognition();
 
     if (!parsed.success) {
@@ -561,12 +614,12 @@ function startVoiceRecognition() {
       return;
     }
 
-    submitGuess(parsed.letter, "voice");
+    submitGuess(parsed.guess, "voice");
   };
 
   recognition.onerror = () => {
     stopRecognition();
-    setStatusMessage("Voice had a little splash. Try again or type a letter.", { speak: true });
+    setStatusMessage("Voice had a little splash. Try again or type your guess.", { speak: true });
   };
 
   recognition.onend = () => {
@@ -604,7 +657,7 @@ function bindEvents() {
   });
 
   els.letterInput.addEventListener("input", () => {
-    const normalized = normalizeManualInput(els.letterInput.value);
+    const normalized = normalizeGuessInput(els.letterInput.value);
     els.letterInput.value = normalized.toUpperCase();
   });
 

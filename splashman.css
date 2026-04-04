@@ -473,6 +473,14 @@ h2 {
   padding: 10px;
 }
 
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
 .meter-label {
   margin: 0 0 6px;
   color: var(--muted);
@@ -480,6 +488,36 @@ h2 {
   letter-spacing: 0.08em;
   font-size: 0.64rem;
   font-weight: 900;
+}
+
+.card-head .meter-label {
+  margin-bottom: 0;
+}
+
+.sound-toggle {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 900;
+  color: white;
+  background: linear-gradient(180deg, #14bfce 0%, #08a5ca 100%);
+  box-shadow: 0 8px 14px rgba(8, 165, 202, 0.18);
+  white-space: nowrap;
+}
+
+.sound-toggle[aria-pressed="true"] {
+  background: linear-gradient(180deg, #9fb2c8 0%, #7d8ea5 100%);
+  box-shadow: 0 8px 14px rgba(95, 114, 140, 0.18);
+}
+
+.sound-toggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .mistake-meter {
@@ -777,6 +815,16 @@ h2 {
   }
 }
 
+@media (max-height: 900px) {
+  .wrong-card {
+    display: none;
+  }
+
+  .status-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 560px) {
   .game-app {
     padding-top: 4px;
@@ -940,6 +988,16 @@ h2 {
   .wrong-card,
   .message-card {
     padding: 8px;
+  }
+
+  .card-head {
+    gap: 8px;
+  }
+
+  .sound-toggle {
+    min-height: 28px;
+    padding: 5px 9px;
+    font-size: 0.7rem;
   }
 
   .mistake-meter {

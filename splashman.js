@@ -280,6 +280,7 @@ const state = {
   listening: false,
   voiceAvailable: !!SpeechRecognitionCtor && window.isSecureContext,
   canSpeak: "speechSynthesis" in window,
+  speechEnabled: "speechSynthesis" in window,
   recognition: null
 };
 
@@ -295,6 +296,7 @@ const els = {
   wrongGuesses: document.getElementById("wrongGuesses"),
   statusMessage: document.getElementById("statusMessage"),
   lastTranscript: document.getElementById("lastTranscript"),
+  soundToggle: document.getElementById("soundToggle"),
   talkButton: document.getElementById("talkButton"),
   voiceHint: document.getElementById("voiceHint"),
   letterInput: document.getElementById("letterInput"),
@@ -369,7 +371,7 @@ function buildCategoryButtons() {
 }
 
 function startNewGame(options = {}) {
-  const { speak = false } = options;
+  const { speak = false, speakHint = false } = options;
   state.targetWord = pickRandomWord(state.category);
   state.correctGuesses = [];
   state.wrongGuesses = [];
@@ -377,7 +379,10 @@ function startNewGame(options = {}) {
   state.status = "playing";
   state.lastTranscript = "";
 
-  const message = `New game. ${CATEGORY_LABELS[state.category]}. Say or type a guess to help Botsly stay dry.`;
+  const hint = WORD_HINTS[state.targetWord];
+  const message = speakHint && hint
+    ? `Hint: ${hint}`
+    : `New game. ${CATEGORY_LABELS[state.category]}. Say or type a guess to help Botsly stay dry.`;
   setStatusMessage(message, { speak });
   render();
   focusLetterInput({ source: "new-game" });
@@ -454,6 +459,7 @@ function render() {
   renderMistakeMeter();
   renderWrongGuesses();
   renderStatus();
+  renderSpeechToggle();
   renderVoiceState();
   renderControlState();
 }
@@ -514,6 +520,16 @@ function renderStatus() {
   els.lastTranscript.textContent = state.lastTranscript ? `Heard: "${state.lastTranscript}"` : "";
 }
 
+function renderSpeechToggle() {
+  els.soundToggle.disabled = !state.canSpeak;
+  els.soundToggle.setAttribute("aria-pressed", String(!state.speechEnabled));
+  els.soundToggle.textContent = state.speechEnabled ? "Mute" : "Unmute";
+  els.soundToggle.setAttribute(
+    "aria-label",
+    state.speechEnabled ? "Mute spoken feedback" : "Unmute spoken feedback"
+  );
+}
+
 function renderVoiceState() {
   if (state.voiceAvailable) {
     els.voiceHint.textContent = "Voice works best on a secure site. Tap once and say a letter or the whole word.";
@@ -548,7 +564,7 @@ function setStatusMessage(message, options = {}) {
 }
 
 function speakMessage(message) {
-  if (!state.canSpeak || !message) {
+  if (!state.canSpeak || !state.speechEnabled || !message) {
     return;
   }
 
@@ -558,6 +574,20 @@ function speakMessage(message) {
   utterance.pitch = 1.08;
   utterance.volume = 1;
   window.speechSynthesis.speak(utterance);
+}
+
+function handleSoundToggle() {
+  if (!state.canSpeak) {
+    return;
+  }
+
+  state.speechEnabled = !state.speechEnabled;
+
+  if (!state.speechEnabled) {
+    window.speechSynthesis.cancel();
+  }
+
+  renderSpeechToggle();
 }
 
 function submitGuess(rawGuess, source = "manual") {
@@ -782,8 +812,9 @@ function handleRepeat() {
 function bindEvents() {
   els.talkButton.addEventListener("click", startVoiceRecognition);
   els.guessButton.addEventListener("click", handleManualGuess);
-  els.newGameButton.addEventListener("click", () => startNewGame({ speak: true }));
+  els.newGameButton.addEventListener("click", () => startNewGame({ speak: true, speakHint: true }));
   els.repeatButton.addEventListener("click", handleRepeat);
+  els.soundToggle.addEventListener("click", handleSoundToggle);
   els.categorySelect.addEventListener("change", () => {
     state.category = els.categorySelect.value;
     startNewGame({ speak: true });

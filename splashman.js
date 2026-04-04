@@ -250,13 +250,31 @@ function startNewGame(options = {}) {
   const message = `New game. ${CATEGORY_LABELS[state.category]}. Say one letter or type one letter to help Botsly stay dry.`;
   setStatusMessage(message, { speak });
   render();
-  focusLetterInput();
+  focusLetterInput({ source: "new-game" });
 }
 
-function focusLetterInput() {
-  if (!isGameOver()) {
-    els.letterInput.focus({ preventScroll: true });
+function isTouchPrimaryInput() {
+  return window.matchMedia?.("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+}
+
+function blurLetterInput() {
+  if (document.activeElement === els.letterInput) {
+    els.letterInput.blur();
   }
+}
+
+function focusLetterInput(options = {}) {
+  const { source = "manual" } = options;
+
+  if (isGameOver() || source === "voice") {
+    return;
+  }
+
+  if (isTouchPrimaryInput()) {
+    return;
+  }
+
+  els.letterInput.focus({ preventScroll: true });
 }
 
 function normalizeManualInput(value) {
@@ -421,7 +439,7 @@ function submitGuess(rawLetter, source = "manual") {
 
   els.letterInput.value = "";
   render();
-  focusLetterInput();
+  focusLetterInput({ source });
 }
 
 function isGameWon() {
@@ -519,6 +537,7 @@ function startVoiceRecognition() {
   }
 
   const recognition = new SpeechRecognitionCtor();
+  blurLetterInput();
   state.recognition = recognition;
   state.listening = true;
   state.lastTranscript = "";

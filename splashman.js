@@ -828,6 +828,18 @@ function speakMessage(message) {
   window.speechSynthesis.speak(utterance);
 }
 
+async function tryLockPortraitOrientation() {
+  if (!screen.orientation?.lock) {
+    return;
+  }
+
+  try {
+    await screen.orientation.lock("portrait");
+  } catch {
+    // Browsers often restrict orientation lock outside fullscreen/PWA contexts.
+  }
+}
+
 function handleSoundToggle() {
   if (!state.canSpeak) {
     return;
@@ -1086,6 +1098,7 @@ function bindEvents() {
 }
 
 function init() {
+  tryLockPortraitOrientation();
   buildCategoryButtons();
   bindEvents();
   startNewGame({ speak: false });

@@ -815,6 +815,12 @@ h2 {
   }
 }
 
+@media (max-width: 699px) {
+  .play-title-block {
+    display: none;
+  }
+}
+
 @media (max-height: 900px) {
   .wrong-card {
     display: none;

@@ -1,14 +1,12 @@
 const SHELL_CACHE = "splashman-shell-v1";
 const RUNTIME_CACHE = "splashman-runtime-v1";
-const OFFLINE_URL = "./splashman.html";
+const OFFLINE_URL = "./index.html";
 
 const PRECACHE_URLS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./splashman.html",
-  "./splashman.css",
-  "./splashman.js",
+  "./game.js",
   "./manifest.webmanifest",
   "./assets/icons/apple-touch-icon.png",
   "./assets/icons/splashman-192.png",
@@ -69,7 +67,7 @@ async function handleNavigationRequest(request) {
   try {
     const networkResponse = await fetch(request);
     const cache = await caches.open(RUNTIME_CACHE);
-    cache.put(request, networkResponse.clone());
+    await cache.put(request, networkResponse.clone());
     return networkResponse;
   } catch {
     return (await caches.match(request)) || caches.match(OFFLINE_URL);
@@ -88,7 +86,7 @@ async function handleAssetRequest(request) {
 
     if (networkResponse.ok) {
       const cache = await caches.open(RUNTIME_CACHE);
-      cache.put(request, networkResponse.clone());
+      await cache.put(request, networkResponse.clone());
     }
 
     return networkResponse;

@@ -19,7 +19,7 @@ window.resumeData = {
       },
       {
         label: "Kid Stuff",
-        href: "splashman.html"
+        href: "../games/splashman/"
       }
     ]
   },

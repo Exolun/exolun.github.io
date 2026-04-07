@@ -2,7 +2,7 @@
   "name": "Splashman",
   "short_name": "Splashman",
   "description": "A kid-friendly mobile word guessing game with tap-to-talk voice input and guess-or-solve play.",
-  "start_url": "./splashman.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f4fbff",

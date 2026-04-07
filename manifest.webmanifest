@@ -1,0 +1,25 @@
+{
+  "name": "Splashman",
+  "short_name": "Splashman",
+  "description": "A kid-friendly mobile word guessing game with tap-to-talk voice input and guess-or-solve play.",
+  "start_url": "./splashman.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4fbff",
+  "theme_color": "#0e4570",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icons/splashman-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/splashman-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

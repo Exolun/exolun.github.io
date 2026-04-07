@@ -559,6 +559,18 @@ const els = {
   repeatButton: document.getElementById("repeatButton")
 };
 
+async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+    return;
+  }
+
+  try {
+    await navigator.serviceWorker.register("./sw.js");
+  } catch (error) {
+    console.error("Splashman service worker registration failed.", error);
+  }
+}
+
 function spritePath(index) {
   return `assets/botsly/${index}.png`;
 }
@@ -1102,6 +1114,7 @@ function init() {
   buildCategoryButtons();
   bindEvents();
   startNewGame({ speak: false });
+  registerServiceWorker();
 }
 
 init();

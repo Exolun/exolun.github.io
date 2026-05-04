@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Private comparison page for June 2026 family trip lodging options.">
+  <title>June Trip Comparison</title>
+  <link rel="stylesheet" href="shared/css/hub.css">
+  <style>
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(82, 213, 255, 0.13), transparent 34%),
+        linear-gradient(155deg, transparent 58%, rgba(45, 184, 128, 0.12)),
+        var(--panel);
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      margin-top: 22px;
+    }
+
+    .summary-item {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .table-panel {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .photo-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .photo-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .photo-card a {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .photo-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .photo-card div {
+      padding: 16px;
+    }
+
+    .photo-card h2 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .photo-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .photo-card:hover,
+    .photo-card:focus-within {
+      border-color: rgba(82, 213, 255, 0.5);
+    }
+
+    .comparison-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .comparison-table th {
+      color: var(--accent-soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .property-name {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+
+    .property-name:hover,
+    .property-name:focus-visible {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .price {
+      color: #d9f9e8;
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    .note {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .badge-list li {
+      padding: 6px 10px;
+      border: 1px solid rgba(155, 233, 255, 0.22);
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(82, 213, 255, 0.08);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .detail-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .detail-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+    }
+
+    .detail-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .detail-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .source-list a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .source-list a:hover,
+    .source-list a:focus-visible {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 720px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="site-shell">
+    <section class="hero">
+      <p class="eyebrow">Private Trip Planning</p>
+      <h1>June 2026 Family Stay Comparison</h1>
+      <p>
+        Side-by-side notes for a June 26-28, 2026 get-together. Prices are based on the displayed VRBO search
+        values in the shared links and should be rechecked at checkout before booking.
+      </p>
+      <div class="summary-grid" aria-label="Trip summary">
+        <div class="summary-item">
+          <strong>Best for largest group</strong>
+          <span>Rockaway Beach duplex, sleeps 20 with 8 bedrooms.</span>
+        </div>
+        <div class="summary-item">
+          <strong>Best upscale pick</strong>
+          <span>Gilded Elk in Cle Elum, highest rating and 4 king bedrooms.</span>
+        </div>
+        <div class="summary-item">
+          <strong>Best mountain value</strong>
+          <span>Ronald cabin, lower than Gilded Elk with pool access and games.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="property-photos-heading">
+      <div class="section-header">
+        <h2 id="property-photos-heading">Property Photos</h2>
+        <p>Images are linked directly from the public VRBO media files.</p>
+      </div>
+      <div class="photo-grid">
+        <article class="photo-card">
+          <a href="https://www.vrbo.com/2632407?chkin=2026-06-26&amp;chkout=2026-06-28&amp;adults=12">
+            <img
+              src="https://media.vrbo.com/lodging/75000000/74740000/74730300/74730252/c24ab1db.jpg?impolicy=resizecrop&amp;ra=fit&amp;rw=598"
+              alt="Mountain deck view at the Ronald cabin"
+            >
+            <div>
+              <h2>Ronald Mountain Cabin</h2>
+              <p>Deck seating with mountain and forest views.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="photo-card">
+          <a href="https://www.vrbo.com/4978355?chkin=2026-06-26&amp;chkout=2026-06-28&amp;adults=20">
+            <img
+              src="https://media.vrbo.com/lodging/124000000/123390000/123383900/123383886/65f73a8d.jpg?impolicy=resizecrop&amp;ra=fit&amp;rw=598"
+              alt="Exterior of the Rockaway Beach duplex"
+              loading="lazy"
+            >
+            <div>
+              <h2>Rockaway Beach Duplex</h2>
+              <p>Large two-sided beach duplex near Rockaway Beach.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="photo-card">
+          <a href="https://www.vrbo.com/3186945?chkin=2026-06-26&amp;chkout=2026-06-28&amp;adults=14">
+            <img
+              src="https://media.vrbo.com/lodging/91000000/90300000/90300000/90299929/b8f1aacd.jpg?impolicy=resizecrop&amp;ra=fit&amp;rw=598"
+              alt="Hot tub and patio at the Gilded Elk"
+              loading="lazy"
+            >
+            <div>
+              <h2>Gilded Elk</h2>
+              <p>Modern Suncadia-area patio with private hot tub.</p>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Main Comparison</h2>
+        <p>Direct property links included; this page is not linked from site navigation.</p>
+      </div>
+      <div class="table-panel">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">Property</th>
+              <th scope="col">Location</th>
+              <th scope="col">Capacity</th>
+              <th scope="col">Price Estimate</th>
+              <th scope="col">Strengths</th>
+              <th scope="col">Watch-outs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a class="property-name" href="https://www.vrbo.com/2632407?chkin=2026-06-26&amp;chkout=2026-06-28&amp;adults=12">
+                  5 BR 4 BA home with hot tub, game room, large deck and mountain views
+                </a>
+                <span class="meta">Also described as Goat Mountain Lodge.</span>
+              </td>
+              <td>Ronald, WA</td>
+              <td>
+                <strong>5 BR, 4 BA, sleeps 14</strong>
+                <span class="note">2 kings, 2 queens, bunk room with 6 twins.</span>
+              </td>
+              <td>
+                <span class="price">$2,175/night</span>
+                <span class="note">About $4,350 for 2 nights. About $363/person for 12 adults.</span>
+              </td>
+              <td>
+                <ul class="badge-list" aria-label="Ronald cabin strengths">
+                  <li>Hot tub</li>
+                  <li>Game room</li>
+                  <li>Mountain views</li>
+                  <li>Shared pool</li>
+                  <li>EV outlet</li>
+                </ul>
+              </td>
+              <td class="meta">
+                Smallest capacity of the three. Dining is listed for 10, check-in is 5 PM, and activity center access
+                may have an extra fee.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a class="property-name" href="https://www.vrbo.com/4978355?chkin=2026-06-26&amp;chkout=2026-06-28&amp;adults=20">
+                  Large sunny duplex with ocean views and nearby beach access
+                </a>
+                <span class="meta">Park Place and Boardwalk.</span>
+              </td>
+              <td>Rockaway Beach, OR</td>
+              <td>
+                <strong>8 BR, 4 BA, sleeps 20</strong>
+                <span class="note">2 kings, 4 queens, 2 bunk/twin rooms. Two self-contained duplex sides.</span>
+              </td>
+              <td>
+                <span class="price">$1,934/night</span>
+                <span class="note">About $3,868 for 2 nights. About $193/person for 20 adults.</span>
+              </td>
+              <td>
+                <ul class="badge-list" aria-label="Rockaway duplex strengths">
+                  <li>Largest capacity</li>
+                  <li>Two kitchens</li>
+                  <li>Beach walk</li>
+                  <li>Lowest per-person</li>
+                  <li>Dog friendly</li>
+                </ul>
+              </td>
+              <td class="meta">
+                No pool or hot tub. Pet policy appears limited to 1 dog by default, with additional dogs by request
+                and no cats.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a class="property-name" href="https://www.vrbo.com/3186945?chkin=2026-06-26&amp;chkout=2026-06-28&amp;adults=14">
+                  Stunning modern luxury in the Cascade Mountains
+                </a>
+                <span class="meta">Gilded Elk in the Suncadia area.</span>
+              </td>
+              <td>Cle Elum, WA</td>
+              <td>
+                <strong>5 BR, 4.5 BA, sleeps 18</strong>
+                <span class="note">4 king rooms plus a large bunk room with twins, queens, and a double bed.</span>
+              </td>
+              <td>
+                <span class="price">$2,591/night</span>
+                <span class="note">About $5,182 for 2 nights. About $370/person for 14 adults.</span>
+              </td>
+              <td>
+                <ul class="badge-list" aria-label="Gilded Elk strengths">
+                  <li>Highest rating</li>
+                  <li>4 king rooms</li>
+                  <li>Chef kitchen</li>
+                  <li>Hot tub</li>
+                  <li>Game room</li>
+                </ul>
+              </td>
+              <td class="meta">
+                Most expensive. No access to the Suncadia pool or fitness center. Up to 2 dogs are allowed with
+                additional fees.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Decision Notes</h2>
+        <p>How the options shake out for a multi-family weekend.</p>
+      </div>
+      <div class="detail-grid">
+        <article class="detail-card">
+          <h3>Pick Rockaway Beach for headcount and cost</h3>
+          <p>
+            The duplex is the practical choice if the group may approach 18-20 people. Two kitchens and two living
+            areas also make it easier for families to split into smaller zones while still sharing one property.
+          </p>
+          <ul>
+            <li>Best per-person estimate.</li>
+            <li>Best bedroom count.</li>
+            <li>Easy beach access for kids and casual downtime.</li>
+          </ul>
+        </article>
+
+        <article class="detail-card">
+          <h3>Pick Gilded Elk for comfort and adult bedrooms</h3>
+          <p>
+            This is the polished option: 4 king bedrooms for adult couples, a large bunk room for kids, and the
+            strongest reviews. It is also the most expensive and has the Suncadia pool limitation.
+          </p>
+          <ul>
+            <li>Best premium kitchen and living setup.</li>
+            <li>Great fit for roughly 4 families.</li>
+            <li>Confirm guest list and vehicle registration requirements before booking.</li>
+          </ul>
+        </article>
+
+        <article class="detail-card">
+          <h3>Pick Ronald for mountain amenities on a smaller scale</h3>
+          <p>
+            The Ronald cabin is a strong middle option for a smaller group that wants hot tub, games, outdoor space,
+            and possible shared pool access without paying the Gilded Elk price.
+          </p>
+          <ul>
+            <li>Good family entertainment mix.</li>
+            <li>Best if 14 people is a real upper bound.</li>
+            <li>Ask about activity center fees and summer pool access timing.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Before Booking</h2>
+        <p>Quick confirmations that could change the decision.</p>
+      </div>
+      <div class="detail-card">
+        <ul>
+          <li>Confirm the final checkout price for June 26-28, 2026, including taxes, cleaning, pet fees, and service fees.</li>
+          <li>Confirm exact pet count, breed/size restrictions, and whether cats are allowed if relevant.</li>
+          <li>Confirm parking limits and whether all families can register vehicles easily.</li>
+          <li>Confirm quiet hours and any restrictions on large family gatherings, since all three listings say no events.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Sources</h2>
+        <p>Public listing mirrors used for details that may not show in the main VRBO page load.</p>
+      </div>
+      <ul class="source-list">
+        <li><a href="https://www.vrbo.com/2632407">Ronald VRBO</a></li>
+        <li><a href="https://ownerdirect.com/property/5-br-4-ba-home-w-hot-tub-game-room-large-deck-spectacular-mountain-views/HA-3212632407">Ronald details</a></li>
+        <li><a href="https://www.vrbo.com/4978355">Rockaway VRBO</a></li>
+        <li><a href="https://www.bringfido.ca/lodging/612566">Rockaway pet details</a></li>
+        <li><a href="https://www.vrbo.com/3186945">Gilded Elk VRBO</a></li>
+        <li><a href="https://www.expedia.com/Cle-Elum-Hotels-Stunning-Modern-Luxury-In-The-Cascade-Mountains.h90299929.Hotel-Information">Gilded Elk details</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

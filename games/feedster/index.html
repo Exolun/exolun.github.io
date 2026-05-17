@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Feedster is a touch-friendly children's math game about snacks, yucky vegetables, and quick number answers.">
+  <meta name="theme-color" content="#26313f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Feedster</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game-app" id="gameApp">
+    <section class="top-panel" aria-labelledby="gameTitle">
+      <div class="title-row">
+        <div>
+          <a class="home-link" href="../../index.html">Back to Games</a>
+          <p class="eyebrow">Feedster</p>
+          <h1 id="gameTitle">Snack Math</h1>
+        </div>
+        <button class="icon-button" id="newRoundButton" type="button" aria-label="New Round">New</button>
+      </div>
+
+      <div class="selectors" aria-label="Game setup">
+        <div class="selector-group" aria-label="Choose mode">
+          <button class="selector-button is-active" type="button" data-mode="scarfing">Scarfing</button>
+          <button class="selector-button" type="button" data-mode="yuckies">Yuckies</button>
+          <button class="selector-button" type="button" data-mode="feast">FEAST</button>
+        </div>
+        <div class="selector-group" aria-label="Choose difficulty">
+          <button class="selector-button is-active" type="button" data-difficulty="easy">Easy</button>
+          <button class="selector-button" type="button" data-difficulty="medium">Medium</button>
+          <button class="selector-button" type="button" data-difficulty="hard">Hard</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage-panel" aria-label="Feedster game board">
+      <div class="stage-header">
+        <p class="mode-pill" id="modeLabel">Scarfing</p>
+        <p class="score-pill" id="scoreLabel">Round 1</p>
+      </div>
+
+      <div class="character-zone">
+        <div class="prompt-bubble" id="promptText" aria-live="polite"></div>
+        <img class="feedster-sprite" id="feedsterSprite" src="assets/feedster/feedster_salivating.png" alt="Feedster waiting for snacks">
+      </div>
+
+      <div class="plate-zone" aria-label="Food plate">
+        <div class="plate" id="plateItems"></div>
+      </div>
+
+      <div class="status-row">
+        <p class="coach-text" id="coachText" aria-live="polite">Feedster is ready.</p>
+        <div class="timer-wrap" id="timerWrap" hidden>
+          <span class="timer-label" id="timerLabel">15</span>
+          <div class="timer-track">
+            <div class="timer-bar" id="timerBar"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="answer-panel" aria-label="Answer controls">
+      <div class="answer-display-row">
+        <label class="sr-only" for="answerInput">Answer</label>
+        <input
+          id="answerInput"
+          class="answer-input"
+          type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          min="0"
+          autocomplete="off"
+          placeholder="?"
+        >
+        <button class="talk-button" id="talkButton" type="button">Talk</button>
+      </div>
+
+      <div class="number-pad" aria-label="Number pad">
+        <button type="button" data-number="1">1</button>
+        <button type="button" data-number="2">2</button>
+        <button type="button" data-number="3">3</button>
+        <button type="button" data-number="4">4</button>
+        <button type="button" data-number="5">5</button>
+        <button type="button" data-number="6">6</button>
+        <button type="button" data-number="7">7</button>
+        <button type="button" data-number="8">8</button>
+        <button type="button" data-number="9">9</button>
+        <button class="pad-secondary" type="button" id="clearButton">Clear</button>
+        <button type="button" data-number="0">0</button>
+        <button class="pad-submit" type="button" id="submitButton">Go</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="orientation-guard" aria-live="polite">
+    <div class="orientation-card">
+      <img src="assets/feedster/feedster_cranky.png" alt="Feedster looking cranky">
+      <p class="orientation-title">Feedster likes portrait mode.</p>
+      <p class="orientation-copy">Rotate your device upright to keep feeding him.</p>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

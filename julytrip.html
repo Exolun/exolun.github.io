@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comparison page for July 2026 family trip lodging options.">
+  <title>July Trip Comparison</title>
+  <link rel="stylesheet" href="shared/css/hub.css">
+  <style>
+    .section:first-child {
+      margin-top: 0;
+    }
+
+    .table-panel {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .comparison-table {
+      width: 100%;
+      min-width: 1060px;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .comparison-table th {
+      color: var(--accent-soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .property-overview {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 116px minmax(0, 1fr);
+      align-items: start;
+      min-width: 280px;
+    }
+
+    .property-thumb {
+      display: block;
+      width: 116px;
+      aspect-ratio: 4 / 3;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .property-name {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+
+    .property-name:hover,
+    .property-name:focus-visible {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .price {
+      color: #d9f9e8;
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    .drive-time {
+      color: var(--text);
+      font-size: 1.08rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .split-control {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      color: var(--muted);
+    }
+
+    .split-control label {
+      font-weight: 700;
+    }
+
+    .split-control input {
+      width: 68px;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 6px 8px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .note {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .badge-list li {
+      padding: 6px 10px;
+      border: 1px solid rgba(155, 233, 255, 0.22);
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(82, 213, 255, 0.08);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .detail-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .detail-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+    }
+
+    .detail-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .detail-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .source-list a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .source-list a:hover,
+    .source-list a:focus-visible {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 720px) {
+      .comparison-table th,
+      .comparison-table td {
+        padding: 14px;
+      }
+
+      .property-overview {
+        grid-template-columns: 92px minmax(0, 1fr);
+        min-width: 230px;
+      }
+
+      .property-thumb {
+        width: 92px;
+      }
+
+      .split-control {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="site-shell">
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>July 10-12 Lodging Options</h2>
+        </div>
+        <div class="split-control">
+          <label for="family-count">Split across</label>
+          <input id="family-count" type="number" min="1" max="20" step="1" value="5" inputmode="numeric">
+          <span>families</span>
+        </div>
+      </div>
+      <div class="table-panel">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">Property</th>
+              <th scope="col">Drive</th>
+              <th scope="col">Capacity</th>
+              <th scope="col">Family Share</th>
+              <th scope="col">Strengths</th>
+              <th scope="col">Watch-outs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="property-overview">
+                  <img
+                    class="property-thumb"
+                    src="https://media.vrbo.com/lodging/57000000/56510000/56508600/56508590/3f7fdc16.jpg?impolicy=resizecrop&amp;ra=fit&amp;rw=598"
+                    alt="Moon River Suites and shaded area along the South Fork Snoqualmie River"
+                  >
+                  <div>
+                    <a class="property-name" href="https://www.vrbo.com/2023918?chkin=2026-07-10&amp;chkout=2026-07-12&amp;adults=16">
+                      North Bend Escapes Moon River 1,2,3
+                    </a>
+                    <span class="meta">North Bend, WA. Three riverfront townhomes booked together for up to 18 guests.</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="drive-time">~45 min</span>
+                <span class="note">Closest option; VRBO lists Seattle Waterfront at about 39 minutes.</span>
+              </td>
+              <td>
+                <strong>6 BR, 3 full + 3 half BA, sleeps 18</strong>
+                <span class="note">Three 2-bedroom suites, each with its own kitchen, living area, balcony and hot tub.</span>
+              </td>
+              <td data-total-price="4754">
+                <span class="price" data-family-share>$951/family</span>
+                <span class="note">$2,377/night. About $4,754 for 2 nights before final taxes and fees.</span>
+              </td>
+              <td>
+                <ul class="badge-list" aria-label="Moon River strengths">
+                  <li>Closest drive</li>
+                  <li>3 kitchens</li>
+                  <li>3 hot tubs</li>
+                  <li>Riverfront</li>
+                  <li>Walkable town</li>
+                </ul>
+              </td>
+              <td class="meta">
+                Highest estimated nightly price. Pet policy lists a 2-pet limit, so 3 dogs would need host approval.
+                Capacity is enough for 16 adults but has less buffer than the other two.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="property-overview">
+                  <img
+                    class="property-thumb"
+                    src="https://media.vrbo.com/lodging/127000000/126720000/126711100/126711009/6e339719.jpg?impolicy=resizecrop&amp;ra=fit&amp;rw=598"
+                    alt="Wooded meadow at Sierra Lodge"
+                    loading="lazy"
+                  >
+                  <div>
+                    <a class="property-name" href="https://www.vrbo.com/5118374?chkin=2026-07-10&amp;chkout=2026-07-12&amp;adults=16">
+                      Sierra Lodge - 3 Acres, Hot Tub, Sauna, Theater
+                    </a>
+                    <span class="meta">Ronald / Cle Elum, WA. Lodge, guest house and entertainment pavilion near Lake Cle Elum.</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="drive-time">~1.5-2 hours</span>
+                <span class="note">Mountain option near Roslyn, Suncadia and Lake Cle Elum.</span>
+              </td>
+              <td>
+                <strong>6 BR, 4 BA, sleeps 20</strong>
+                <span class="note">Two king rooms, two queen rooms, two bunk rooms and extra sofa beds.</span>
+              </td>
+              <td data-total-price="3519">
+                <span class="price" data-family-share>$704/family</span>
+                <span class="note">$3,519 for 2 nights before final taxes and fees.</span>
+              </td>
+              <td>
+                <ul class="badge-list" aria-label="Sierra Lodge strengths">
+                  <li>Best balance</li>
+                  <li>Hot tub</li>
+                  <li>Sauna</li>
+                  <li>Theater</li>
+                  <li>Indoor pickleball</li>
+                </ul>
+              </td>
+              <td class="meta">
+                Brand-new listing with only 1 review visible. House rules say no events, and pet policy lists dogs
+                with a 2-dog limit, so confirm the exact group and dog count before booking.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="property-overview">
+                  <img
+                    class="property-thumb"
+                    src="https://media.vrbo.com/lodging/31000000/30080000/30076200/30076152/a2a64be7.jpg?impolicy=resizecrop&amp;ra=fit&amp;rw=598"
+                    alt="Exterior of the Spokane luxury home"
+                    loading="lazy"
+                  >
+                  <div>
+                    <a class="property-name" href="https://www.vrbo.com/865119?chkin=2026-07-10&amp;chkout=2026-07-12&amp;adults=16">
+                      Deer's Run - 5000 sq ft Luxury Home
+                    </a>
+                    <span class="meta">Spokane, WA. Large forest-view home with hot tub, pool table, ping pong and two kitchens.</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="drive-time">~4.5-5 hours</span>
+                <span class="note">Longest drive by a wide margin.</span>
+              </td>
+              <td>
+                <strong>6 BR, 3 BA, sleeps 25</strong>
+                <span class="note">Largest posted capacity, with multiple common-area sleeping spots.</span>
+              </td>
+              <td data-total-price="2562">
+                <span class="price" data-family-share>$512/family</span>
+                <span class="note">$1,281/night. About $2,562 for 2 nights before final taxes and fees.</span>
+              </td>
+              <td>
+                <ul class="badge-list" aria-label="Deer's Run strengths">
+                  <li>Lowest share</li>
+                  <li>Sleeps 25</li>
+                  <li>Hot tub</li>
+                  <li>Game tables</li>
+                  <li>2 kitchens</li>
+                </ul>
+              </td>
+              <td class="meta">
+                Listing text says Summer 2026 weekend stays have a 3-night minimum, so July 10-12 may not be bookable
+                as a 2-night stay. Pet policy is also strict: 1 dog under 20 lb total.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Decision Notes</h2>
+        <p>How the options shake out for a July family weekend.</p>
+      </div>
+      <div class="detail-grid">
+        <article class="detail-card">
+          <h3>Pick North Bend for the easiest weekend</h3>
+          <p>
+            Moon River is the least disruptive choice: shortest drive, walkable North Bend setting, river access and
+            three separate townhomes so families can spread out without separating completely.
+          </p>
+          <ul>
+            <li>Best fit if minimizing car time is the priority.</li>
+            <li>Strong family-zone setup with three kitchens and three hot tubs.</li>
+            <li>Most expensive option in the July search results.</li>
+          </ul>
+        </article>
+
+        <article class="detail-card">
+          <h3>Pick Sierra Lodge for the best balance</h3>
+          <p>
+            Sierra Lodge has the strongest blend of drive time, price, group capacity and built-in activities. The
+            entertainment pavilion makes it the best rainy-day or mixed-age-kids option.
+          </p>
+          <ul>
+            <li>Good capacity buffer for 16 adults plus kids.</li>
+            <li>Hot tub, sauna, theater and indoor mini pickleball.</li>
+            <li>Confirm dog count and the no-events rule with the host.</li>
+          </ul>
+        </article>
+
+        <article class="detail-card">
+          <h3>Pick Spokane only if the constraints work</h3>
+          <p>
+            Deer's Run is the clear price and headcount winner on paper, but the long drive, stricter pet rule and
+            apparent 3-night summer weekend minimum could outweigh the savings.
+          </p>
+          <ul>
+            <li>Lowest estimated share per family.</li>
+            <li>Largest stated sleeping capacity.</li>
+            <li>Likely needs a Thursday-Sunday booking instead of Friday-Sunday.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Before Booking</h2>
+        <p>Quick confirmations that could change the decision.</p>
+      </div>
+      <div class="detail-card">
+        <ul>
+          <li>Confirm the final checkout price for July 10-12, 2026, including taxes, cleaning, pet fees and service fees.</li>
+          <li>Confirm the minimum stay rules, especially for the Spokane listing.</li>
+          <li>Confirm that the full dog count is allowed. North Bend and Sierra Lodge list 2-pet limits; Spokane lists 1 dog under 20 lb.</li>
+          <li>Confirm the final headcount, parking limits and any vehicle registration requirements.</li>
+          <li>Confirm whether the gathering is treated as a normal family stay or an event under the host's rules.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Sources</h2>
+        <p>Reference links for the property listings and supporting details.</p>
+      </div>
+      <ul class="source-list">
+        <li><a href="https://www.vrbo.com/2023918">North Bend Moon River</a></li>
+        <li><a href="https://www.vrbo.com/5118374">Sierra Lodge</a></li>
+        <li><a href="https://www.vrbo.com/865119">Deer's Run Spokane</a></li>
+      </ul>
+    </section>
+  </main>
+  <script>
+    const familyCountInput = document.querySelector("#family-count");
+    const priceFormatter = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      style: "currency",
+      currency: "USD"
+    });
+
+    function updateFamilyShares() {
+      const familyCount = Math.max(1, Number.parseInt(familyCountInput.value, 10) || 1);
+
+      document.querySelectorAll("[data-total-price]").forEach((cell) => {
+        const totalPrice = Number.parseFloat(cell.dataset.totalPrice);
+        const share = Math.round(totalPrice / familyCount);
+        const shareElement = cell.querySelector("[data-family-share]");
+
+        if (shareElement) {
+          shareElement.textContent = `${priceFormatter.format(share)}/family`;
+        }
+      });
+    }
+
+    familyCountInput.addEventListener("input", updateFamilyShares);
+    updateFamilyShares();
+  </script>
+</body>
+</html>

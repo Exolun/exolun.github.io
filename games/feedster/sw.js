@@ -1,5 +1,5 @@
-const SHELL_CACHE = "feedster-shell-v5";
-const RUNTIME_CACHE = "feedster-runtime-v5";
+const SHELL_CACHE = "feedster-shell-v6";
+const RUNTIME_CACHE = "feedster-runtime-v6";
 const OFFLINE_URL = "./index.html";
 
 const PRECACHE_URLS = [

@@ -228,9 +228,10 @@ h1 {
 .feedster-sprite {
   display: block;
   width: min(100%, 230px);
-  max-height: 205px;
+  max-height: min(205px, calc(100% - 12px));
   object-fit: contain;
   justify-self: center;
+  align-self: center;
   filter: drop-shadow(0 14px 14px rgba(21, 27, 36, 0.25));
 }
 
@@ -509,7 +510,7 @@ h1 {
   }
 
   .feedster-sprite {
-    max-height: 280px;
+    max-height: min(280px, calc(100% - 12px));
   }
 }
 
@@ -558,7 +559,7 @@ h1 {
   }
 
   .feedster-sprite {
-    max-height: 150px;
+    max-height: min(150px, calc(100% - 10px));
   }
 
   .plate-zone {
@@ -618,6 +619,18 @@ h1 {
   .stat-chip {
     min-height: 24px;
     font-size: 0.62rem;
+  }
+}
+
+@media (max-height: 880px) and (min-width: 700px) {
+  .character-zone {
+    min-height: 190px;
+  }
+
+  .feedster-sprite {
+    align-self: start;
+    margin-top: 6px;
+    max-height: min(178px, calc(100% - 12px));
   }
 }
 

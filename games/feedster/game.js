@@ -116,6 +116,9 @@ const FOOD_IMAGES = {
   broccoli: "assets/food/food_broccoli.png"
 };
 
+const ACTIVE_FAVORITE_FOODS = FAVORITE_FOODS.filter((food) => FOOD_IMAGES[food]);
+const ACTIVE_YUCKY_FOODS = YUCKY_FOODS.filter((food) => FOOD_IMAGES[food]);
+
 const STORAGE_KEYS = {
   sound: "feedsterSoundEnabled",
   bestStreak: "feedsterBestStreak"
@@ -217,7 +220,7 @@ function buildScarfingProblem() {
   const maxAnswer = Math.min(config.answerMax || target, target - config.currentMin);
   const answer = randomInt(config.answerMin, maxAnswer);
   const current = target - answer;
-  const food = sample(FAVORITE_FOODS);
+  const food = sample(ACTIVE_FAVORITE_FOODS);
 
   return {
     type: "scarfing",
@@ -237,7 +240,7 @@ function buildYuckiesProblem() {
   const maxRemove = Math.min(config.removeMax || start, start - config.answerMin);
   const remove = randomInt(config.removeMin, maxRemove);
   const answer = start - remove;
-  const food = sample(YUCKY_FOODS);
+  const food = sample(ACTIVE_YUCKY_FOODS);
 
   return {
     type: "yuckies",

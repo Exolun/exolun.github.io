@@ -228,10 +228,11 @@ h1 {
 .feedster-sprite {
   display: block;
   width: min(100%, 230px);
-  max-height: min(205px, calc(100% - 12px));
+  max-height: min(196px, calc(100% - 28px));
   object-fit: contain;
   justify-self: center;
   align-self: center;
+  transform: translateY(-4px);
   filter: drop-shadow(0 14px 14px rgba(21, 27, 36, 0.25));
 }
 
@@ -510,7 +511,7 @@ h1 {
   }
 
   .feedster-sprite {
-    max-height: min(280px, calc(100% - 12px));
+    max-height: min(264px, calc(100% - 28px));
   }
 }
 
@@ -559,7 +560,7 @@ h1 {
   }
 
   .feedster-sprite {
-    max-height: min(150px, calc(100% - 10px));
+    max-height: min(136px, calc(100% - 24px));
   }
 
   .plate-zone {
@@ -630,7 +631,7 @@ h1 {
   .feedster-sprite {
     align-self: start;
     margin-top: 6px;
-    max-height: min(178px, calc(100% - 12px));
+    max-height: min(164px, calc(100% - 28px));
   }
 }
 

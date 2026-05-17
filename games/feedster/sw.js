@@ -1,5 +1,5 @@
-const SHELL_CACHE = "feedster-shell-v4";
-const RUNTIME_CACHE = "feedster-runtime-v4";
+const SHELL_CACHE = "feedster-shell-v5";
+const RUNTIME_CACHE = "feedster-runtime-v5";
 const OFFLINE_URL = "./index.html";
 
 const PRECACHE_URLS = [
@@ -16,7 +16,14 @@ const PRECACHE_URLS = [
   "./assets/feedster/feedster_grinning.png",
   "./assets/feedster/feedster_gross_veggies.png",
   "./assets/feedster/feedster_salivating.png",
-  "./assets/feedster/feedster_stuffed_full.png"
+  "./assets/feedster/feedster_stuffed_full.png",
+  "./assets/feedster/feedster_waiting_neutral.png",
+  "./assets/food/food_berries.png",
+  "./assets/food/food_broccoli.png",
+  "./assets/food/food_cheese_cubes.png",
+  "./assets/food/food_cookies.png",
+  "./assets/food/food_cupcake.png",
+  "./assets/food/food_donut.png"
 ];
 
 self.addEventListener("install", (event) => {

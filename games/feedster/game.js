@@ -16,7 +16,7 @@ const YUCKY_FOODS = [
 ];
 
 const SPRITES = {
-  waiting: "assets/feedster/feedster_salivating.png",
+  waiting: "assets/feedster/feedster_waiting_neutral.png",
   correct: "assets/feedster/feedster_grinning.png",
   feast: "assets/feedster/feedster_feasting.png",
   wrong: "assets/feedster/feedster_cranky.png",
@@ -104,6 +104,15 @@ const SINGULAR_FOODS = {
   carrots: "carrot",
   spinach: "spinach",
   "brussels sprouts": "brussels sprout"
+};
+
+const FOOD_IMAGES = {
+  cookies: "assets/food/food_cookies.png",
+  cupcakes: "assets/food/food_cupcake.png",
+  donuts: "assets/food/food_donut.png",
+  berries: "assets/food/food_berries.png",
+  "cheese cubes": "assets/food/food_cheese_cubes.png",
+  broccoli: "assets/food/food_broccoli.png"
 };
 
 const STORAGE_KEYS = {
@@ -290,10 +299,7 @@ function renderPlate(problem) {
   }
 
   for (let index = 0; index < visibleCount; index += 1) {
-    const item = document.createElement("span");
-    item.className = "food-token";
-    item.textContent = foodLabel(problem.food, 1);
-    fragment.appendChild(item);
+    fragment.appendChild(createFoodToken(problem.food));
   }
 
   if (hiddenCount > 0) {
@@ -318,6 +324,30 @@ function createFact(label, value) {
   fact.className = "plate-fact";
   fact.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
   return fact;
+}
+
+function createFoodToken(food) {
+  const item = document.createElement("span");
+  const foodName = foodLabel(food, 1);
+  const image = FOOD_IMAGES[food];
+
+  item.className = "food-token";
+  item.setAttribute("aria-label", foodName);
+  item.title = foodName;
+
+  if (!image) {
+    item.textContent = foodName;
+    return item;
+  }
+
+  item.classList.add("food-token-image");
+
+  const img = document.createElement("img");
+  img.src = image;
+  img.alt = "";
+  img.setAttribute("aria-hidden", "true");
+  item.appendChild(img);
+  return item;
 }
 
 function updateSelectorState() {

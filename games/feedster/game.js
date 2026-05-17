@@ -65,6 +65,11 @@ const SINGULAR_FOODS = {
   "brussels sprouts": "brussels sprout"
 };
 
+const STORAGE_KEYS = {
+  sound: "feedsterSoundEnabled",
+  bestStreak: "feedsterBestStreak"
+};
+
 const state = {
   mode: "scarfing",
   difficulty: "easy",
@@ -77,7 +82,15 @@ const state = {
   timerId: null,
   speechRecognizer: null,
   isListening: false,
-  isAdvancing: false
+  isAdvancing: false,
+  soundEnabled: readStoredBoolean(STORAGE_KEYS.sound, false),
+  audioContext: null,
+  stats: {
+    correct: 0,
+    attempts: 0,
+    streak: 0,
+    best: readStoredNumber(STORAGE_KEYS.bestStreak, 0)
+  }
 };
 
 const elements = {
@@ -88,6 +101,7 @@ const elements = {
   clearButton: document.querySelector("#clearButton"),
   submitButton: document.querySelector("#submitButton"),
   newRoundButton: document.querySelector("#newRoundButton"),
+  soundButton: document.querySelector("#soundButton"),
   talkButton: document.querySelector("#talkButton"),
   promptText: document.querySelector("#promptText"),
   feedsterSprite: document.querySelector("#feedsterSprite"),
@@ -97,8 +111,37 @@ const elements = {
   scoreLabel: document.querySelector("#scoreLabel"),
   timerWrap: document.querySelector("#timerWrap"),
   timerLabel: document.querySelector("#timerLabel"),
-  timerBar: document.querySelector("#timerBar")
+  timerBar: document.querySelector("#timerBar"),
+  sessionStat: document.querySelector("#sessionStat"),
+  streakStat: document.querySelector("#streakStat"),
+  bestStat: document.querySelector("#bestStat")
 };
+
+function readStoredBoolean(key, fallback) {
+  try {
+    const value = window.localStorage.getItem(key);
+    return value === null ? fallback : value === "true";
+  } catch {
+    return fallback;
+  }
+}
+
+function readStoredNumber(key, fallback) {
+  try {
+    const value = Number(window.localStorage.getItem(key));
+    return Number.isFinite(value) ? value : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStoredValue(key, value) {
+  try {
+    window.localStorage.setItem(key, String(value));
+  } catch {
+    // Local storage can be unavailable in private or locked-down contexts.
+  }
+}
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -251,6 +294,101 @@ function updateLabels() {
   }
 }
 
+function updateStats() {
+  elements.sessionStat.textContent = `Right ${state.stats.correct}/${state.stats.attempts}`;
+  elements.streakStat.textContent = `Streak ${state.stats.streak}`;
+  elements.bestStat.textContent = `Best ${state.stats.best}`;
+}
+
+function recordResult(isCorrect) {
+  state.stats.attempts += 1;
+
+  if (isCorrect) {
+    state.stats.correct += 1;
+    state.stats.streak += 1;
+  } else {
+    state.stats.streak = 0;
+  }
+
+  if (state.stats.streak > state.stats.best) {
+    state.stats.best = state.stats.streak;
+    writeStoredValue(STORAGE_KEYS.bestStreak, state.stats.best);
+  }
+
+  updateStats();
+}
+
+function updateSoundButton() {
+  elements.soundButton.setAttribute("aria-pressed", String(state.soundEnabled));
+  elements.soundButton.setAttribute("aria-label", state.soundEnabled ? "Turn sound off" : "Turn sound on");
+  elements.soundButton.textContent = state.soundEnabled ? "Sound On" : "Sound";
+}
+
+function toggleSound() {
+  state.soundEnabled = !state.soundEnabled;
+  writeStoredValue(STORAGE_KEYS.sound, state.soundEnabled);
+  updateSoundButton();
+
+  if (state.soundEnabled) {
+    playCue("toggle");
+  }
+}
+
+function getAudioContext() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContext) {
+    return null;
+  }
+
+  if (!state.audioContext) {
+    state.audioContext = new AudioContext();
+  }
+
+  if (state.audioContext.state === "suspended") {
+    state.audioContext.resume();
+  }
+
+  return state.audioContext;
+}
+
+function playCue(kind) {
+  if (!state.soundEnabled) {
+    return;
+  }
+
+  const audioContext = getAudioContext();
+
+  if (!audioContext) {
+    return;
+  }
+
+  const cues = {
+    toggle: [420, 540],
+    correct: [520, 720, 880],
+    wrong: [220, 170],
+    done: [420, 620, 760, 520]
+  };
+  const frequencies = cues[kind] || cues.toggle;
+  const start = audioContext.currentTime;
+
+  frequencies.forEach((frequency, index) => {
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const cueStart = start + index * 0.08;
+    const cueEnd = cueStart + 0.09;
+
+    oscillator.type = kind === "wrong" ? "triangle" : "sine";
+    oscillator.frequency.setValueAtTime(frequency, cueStart);
+    gain.gain.setValueAtTime(0.0001, cueStart);
+    gain.gain.exponentialRampToValueAtTime(kind === "wrong" ? 0.08 : 0.12, cueStart + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, cueEnd);
+    oscillator.connect(gain).connect(audioContext.destination);
+    oscillator.start(cueStart);
+    oscillator.stop(cueEnd + 0.01);
+  });
+}
+
 function clearTimer() {
   window.clearInterval(state.timerId);
   state.timerId = null;
@@ -276,6 +414,7 @@ function startTimer() {
     if (state.timeLeft <= 0) {
       clearTimer();
       state.isAdvancing = true;
+      recordResult(false);
       elements.answerInput.value = "";
       handleIncorrect("Time. Feedster is still chomping.");
       window.setTimeout(nextFeastProblem, 850);
@@ -331,6 +470,7 @@ function finishFeast() {
   elements.scoreLabel.textContent = `${state.feastScore}/${total} right`;
   elements.answerInput.value = "";
   setSprite("done");
+  playCue("done");
 }
 
 function nextFeastProblem() {
@@ -348,6 +488,8 @@ function nextFeastProblem() {
 function handleCorrect() {
   state.isAdvancing = true;
   clearTimer();
+  recordResult(true);
+  playCue("correct");
   setSprite(state.mode === "feast" ? "feast" : "correct");
   elements.coachText.textContent = state.currentProblem.correct;
 
@@ -362,6 +504,7 @@ function handleCorrect() {
 }
 
 function handleIncorrect(message = state.currentProblem.wrong) {
+  playCue("wrong");
   setSprite("wrong");
   elements.coachText.textContent = message;
 }
@@ -393,11 +536,13 @@ function submitAnswer() {
   if (state.mode === "feast") {
     state.isAdvancing = true;
     clearTimer();
+    recordResult(false);
     handleIncorrect();
     window.setTimeout(nextFeastProblem, 850);
     return;
   }
 
+  recordResult(false);
   handleIncorrect();
 }
 
@@ -532,6 +677,7 @@ elements.clearButton.addEventListener("click", () => {
 
 elements.submitButton.addEventListener("click", submitAnswer);
 elements.newRoundButton.addEventListener("click", startMode);
+elements.soundButton.addEventListener("click", toggleSound);
 
 elements.answerInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
@@ -548,6 +694,8 @@ elements.talkButton.addEventListener("click", () => {
 });
 
 setupSpeechRecognition();
+updateSoundButton();
+updateStats();
 startMode();
 
 if ("serviceWorker" in navigator) {

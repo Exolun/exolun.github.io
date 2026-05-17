@@ -21,7 +21,10 @@
           <p class="eyebrow">Feedster</p>
           <h1 id="gameTitle">Snack Math</h1>
         </div>
-        <button class="icon-button" id="newRoundButton" type="button" aria-label="New Round">New</button>
+        <div class="title-actions">
+          <button class="icon-button icon-button-secondary" id="soundButton" type="button" aria-label="Turn sound on" aria-pressed="false">Sound</button>
+          <button class="icon-button" id="newRoundButton" type="button" aria-label="New Round">New</button>
+        </div>
       </div>
 
       <div class="selectors" aria-label="Game setup">
@@ -61,6 +64,11 @@
             <div class="timer-bar" id="timerBar"></div>
           </div>
         </div>
+      </div>
+      <div class="stats-row" aria-label="Session stats">
+        <span class="stat-chip" id="sessionStat">Right 0/0</span>
+        <span class="stat-chip" id="streakStat">Streak 0</span>
+        <span class="stat-chip" id="bestStat">Best 0</span>
       </div>
     </section>
 

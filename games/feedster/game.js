@@ -86,6 +86,12 @@ const MODES = {
   feast: "FEAST"
 };
 
+const DIFFICULTY_HINTS = {
+  easy: "Easy: snack counts up to 10",
+  medium: "Medium: snack counts up to 20",
+  hard: "Hard: 3-digit snack math"
+};
+
 const SINGULAR_FOODS = {
   cookies: "cookie",
   cupcakes: "cupcake",
@@ -139,6 +145,7 @@ const elements = {
   soundButton: document.querySelector("#soundButton"),
   talkButton: document.querySelector("#talkButton"),
   promptText: document.querySelector("#promptText"),
+  difficultyHint: document.querySelector("#difficultyHint"),
   feedsterSprite: document.querySelector("#feedsterSprite"),
   plateItems: document.querySelector("#plateItems"),
   coachText: document.querySelector("#coachText"),
@@ -324,6 +331,7 @@ function updateSelectorState() {
 
 function updateLabels() {
   elements.modeLabel.textContent = `${MODES[state.mode]} - ${DIFFICULTIES[state.difficulty].label}`;
+  elements.difficultyHint.textContent = DIFFICULTY_HINTS[state.difficulty];
 
   if (state.mode === "feast") {
     const total = DIFFICULTIES[state.difficulty].feastRounds;

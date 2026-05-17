@@ -177,6 +177,16 @@ h1 {
   background: var(--copper);
 }
 
+.difficulty-hint {
+  min-height: 18px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+}
+
 .mode-pill,
 .score-pill {
   padding: 8px 10px;
@@ -506,6 +516,11 @@ h1 {
 
   .selector-button {
     min-height: 42px;
+  }
+
+  .difficulty-hint {
+    margin-top: 4px;
+    font-size: 0.7rem;
   }
 
   .icon-button {

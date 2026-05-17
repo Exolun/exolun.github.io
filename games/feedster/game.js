@@ -111,6 +111,7 @@ const FOOD_IMAGES = {
   cupcakes: "assets/food/food_cupcake.png",
   donuts: "assets/food/food_donut.png",
   berries: "assets/food/food_berries.png",
+  "pizza bites": "assets/food/food_pizza_bites.png",
   "cheese cubes": "assets/food/food_cheese_cubes.png",
   broccoli: "assets/food/food_broccoli.png"
 };

@@ -1,5 +1,5 @@
-const SHELL_CACHE = "feedster-shell-v6";
-const RUNTIME_CACHE = "feedster-runtime-v6";
+const SHELL_CACHE = "feedster-shell-v7";
+const RUNTIME_CACHE = "feedster-runtime-v7";
 const OFFLINE_URL = "./index.html";
 
 const PRECACHE_URLS = [
@@ -23,7 +23,8 @@ const PRECACHE_URLS = [
   "./assets/food/food_cheese_cubes.png",
   "./assets/food/food_cookies.png",
   "./assets/food/food_cupcake.png",
-  "./assets/food/food_donut.png"
+  "./assets/food/food_donut.png",
+  "./assets/food/food_pizza_bites.png"
 ];
 
 self.addEventListener("install", (event) => {

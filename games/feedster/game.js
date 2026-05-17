@@ -51,6 +51,20 @@ const MODES = {
   feast: "FEAST"
 };
 
+const SINGULAR_FOODS = {
+  cookies: "cookie",
+  cupcakes: "cupcake",
+  donuts: "donut",
+  berries: "berry",
+  "pizza bites": "pizza bite",
+  "cheese cubes": "cheese cube",
+  broccoli: "broccoli",
+  peas: "pea",
+  carrots: "carrot",
+  spinach: "spinach",
+  "brussels sprouts": "brussels sprout"
+};
+
 const state = {
   mode: "scarfing",
   difficulty: "easy",
@@ -94,6 +108,14 @@ function sample(items) {
   return items[randomInt(0, items.length - 1)];
 }
 
+function foodLabel(food, count) {
+  if (count === 1) {
+    return SINGULAR_FOODS[food] || food;
+  }
+
+  return food;
+}
+
 function buildScarfingProblem() {
   const max = DIFFICULTIES[state.difficulty].max;
   const target = randomInt(Math.min(4, max), max);
@@ -106,8 +128,8 @@ function buildScarfingProblem() {
     shownCount: current,
     totalCount: target,
     answer: target - current,
-    prompt: `Feedster has ${current} ${food}. He wants ${target}. How many more?`,
-    correct: `Yes. ${target - current} more ${food} for Feedster.`,
+    prompt: `Feedster has ${current} ${foodLabel(food, current)}. He wants ${target}. How many more?`,
+    correct: `Yes. ${target - current} more ${foodLabel(food, target - current)} for Feedster.`,
     wrong: `Almost. Count from ${current} up to ${target}.`
   };
 }
@@ -124,8 +146,8 @@ function buildYuckiesProblem() {
     shownCount: start,
     removeCount: remove,
     answer: start - remove,
-    prompt: `There are ${start} ${food}. Take away ${remove}. How many are left?`,
-    correct: `Good. Only ${start - remove} ${food} left on the plate.`,
+    prompt: `There are ${start} ${foodLabel(food, start)}. Take away ${remove}. How many are left?`,
+    correct: `Good. Only ${start - remove} ${foodLabel(food, start - remove)} left on the plate.`,
     wrong: `Try counting back ${remove} from ${start}.`
   };
 }
@@ -149,17 +171,39 @@ function setSprite(kind) {
 
 function renderPlate(problem) {
   const count = problem.shownCount;
-  const visibleCount = Math.min(count, 16);
+  const visibleCount = Math.min(count, 12);
   const hiddenCount = Math.max(0, count - visibleCount);
   const fragment = document.createDocumentFragment();
 
   elements.plateItems.innerHTML = "";
   elements.plateItems.dataset.type = problem.type;
 
+  const facts = document.createElement("div");
+  facts.className = "plate-facts";
+
+  if (problem.type === "scarfing") {
+    facts.appendChild(createFact("has", count));
+    facts.appendChild(createFact("wants", problem.totalCount));
+    facts.appendChild(createFact("add", "?"));
+  } else {
+    facts.appendChild(createFact("start", count));
+    facts.appendChild(createFact("take", problem.removeCount));
+    facts.appendChild(createFact("left", "?"));
+  }
+
+  fragment.appendChild(facts);
+
+  if (count === 0) {
+    const empty = document.createElement("span");
+    empty.className = "food-token food-token-empty";
+    empty.textContent = "empty plate";
+    fragment.appendChild(empty);
+  }
+
   for (let index = 0; index < visibleCount; index += 1) {
     const item = document.createElement("span");
     item.className = "food-token";
-    item.textContent = problem.food;
+    item.textContent = foodLabel(problem.food, 1);
     fragment.appendChild(item);
   }
 
@@ -178,6 +222,13 @@ function renderPlate(problem) {
   }
 
   elements.plateItems.appendChild(fragment);
+}
+
+function createFact(label, value) {
+  const fact = document.createElement("span");
+  fact.className = "plate-fact";
+  fact.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
+  return fact;
 }
 
 function updateSelectorState() {

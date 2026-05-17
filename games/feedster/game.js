@@ -27,19 +27,54 @@ const SPRITES = {
 const DIFFICULTIES = {
   easy: {
     label: "Easy",
-    max: 10,
+    scarfing: {
+      targetMin: 4,
+      targetMax: 10,
+      currentMin: 0,
+      answerMin: 0
+    },
+    yuckies: {
+      startMin: 1,
+      startMax: 10,
+      removeMin: 0,
+      answerMin: 0
+    },
     feastRounds: 5,
     feastSeconds: 18
   },
   medium: {
     label: "Medium",
-    max: 20,
+    scarfing: {
+      targetMin: 8,
+      targetMax: 20,
+      currentMin: 2,
+      answerMin: 2
+    },
+    yuckies: {
+      startMin: 8,
+      startMax: 20,
+      removeMin: 1,
+      answerMin: 1
+    },
     feastRounds: 7,
     feastSeconds: 15
   },
   hard: {
     label: "Hard",
-    max: 50,
+    scarfing: {
+      targetMin: 100,
+      targetMax: 150,
+      currentMin: 20,
+      answerMin: 12,
+      answerMax: 99
+    },
+    yuckies: {
+      startMin: 100,
+      startMax: 150,
+      removeMin: 12,
+      removeMax: 99,
+      answerMin: 10
+    },
     feastRounds: 10,
     feastSeconds: 12
   }
@@ -160,9 +195,11 @@ function foodLabel(food, count) {
 }
 
 function buildScarfingProblem() {
-  const max = DIFFICULTIES[state.difficulty].max;
-  const target = randomInt(Math.min(4, max), max);
-  const current = randomInt(0, target);
+  const config = DIFFICULTIES[state.difficulty].scarfing;
+  const target = randomInt(config.targetMin, config.targetMax);
+  const maxAnswer = Math.min(config.answerMax || target, target - config.currentMin);
+  const answer = randomInt(config.answerMin, maxAnswer);
+  const current = target - answer;
   const food = sample(FAVORITE_FOODS);
 
   return {
@@ -170,17 +207,19 @@ function buildScarfingProblem() {
     food,
     shownCount: current,
     totalCount: target,
-    answer: target - current,
+    answer,
     prompt: `Feedster has ${current} ${foodLabel(food, current)}. He wants ${target}. How many more?`,
-    correct: `Yes. ${target - current} more ${foodLabel(food, target - current)} for Feedster.`,
+    correct: `Yes. ${answer} more ${foodLabel(food, answer)} for Feedster.`,
     wrong: `Almost. Count from ${current} up to ${target}.`
   };
 }
 
 function buildYuckiesProblem() {
-  const max = DIFFICULTIES[state.difficulty].max;
-  const start = randomInt(1, max);
-  const remove = randomInt(0, start);
+  const config = DIFFICULTIES[state.difficulty].yuckies;
+  const start = randomInt(config.startMin, config.startMax);
+  const maxRemove = Math.min(config.removeMax || start, start - config.answerMin);
+  const remove = randomInt(config.removeMin, maxRemove);
+  const answer = start - remove;
   const food = sample(YUCKY_FOODS);
 
   return {
@@ -188,9 +227,9 @@ function buildYuckiesProblem() {
     food,
     shownCount: start,
     removeCount: remove,
-    answer: start - remove,
+    answer,
     prompt: `There are ${start} ${foodLabel(food, start)}. Take away ${remove}. How many are left?`,
-    correct: `Good. Only ${start - remove} ${foodLabel(food, start - remove)} left on the plate.`,
+    correct: `Good. Only ${answer} ${foodLabel(food, answer)} left on the plate.`,
     wrong: `Try counting back ${remove} from ${start}.`
   };
 }
@@ -611,7 +650,7 @@ function parseSpokenNumber(transcript) {
     return digitMatch[0];
   }
 
-  const numberWords = {
+  const smallWords = {
     zero: 0,
     one: 1,
     two: 2,
@@ -631,25 +670,43 @@ function parseSpokenNumber(transcript) {
     sixteen: 16,
     seventeen: 17,
     eighteen: 18,
-    nineteen: 19,
+    nineteen: 19
+  };
+  const tensWords = {
     twenty: 20,
     thirty: 30,
     forty: 40,
-    fifty: 50
+    fifty: 50,
+    sixty: 60,
+    seventy: 70,
+    eighty: 80,
+    ninety: 90
   };
 
-  const parts = transcript.replace(/-/g, " ").split(/\s+/);
-  let total = 0;
+  const parts = transcript.replace(/-/g, " ").split(/\s+/).filter((part) => part !== "and");
+  let value = 0;
   let found = false;
 
   parts.forEach((part) => {
-    if (numberWords[part] !== undefined) {
-      total += numberWords[part];
+    if (smallWords[part] !== undefined) {
+      value += smallWords[part];
+      found = true;
+      return;
+    }
+
+    if (tensWords[part] !== undefined) {
+      value += tensWords[part];
+      found = true;
+      return;
+    }
+
+    if (part === "hundred") {
+      value = (value || 1) * 100;
       found = true;
     }
   });
 
-  return found ? String(total) : null;
+  return found ? String(value) : null;
 }
 
 elements.modeButtons.forEach((button) => {

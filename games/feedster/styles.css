@@ -152,6 +152,85 @@ h1 {
   background: var(--blue);
 }
 
+.help-dialog {
+  width: min(100% - 24px, 520px);
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  color: var(--charcoal);
+  background: transparent;
+}
+
+.help-dialog::backdrop {
+  background: rgba(21, 27, 36, 0.56);
+}
+
+.help-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--panel-strong);
+  box-shadow: var(--shadow);
+}
+
+.help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.help-header h2 {
+  margin: 0;
+  font-family: var(--display-font);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.dialog-close {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 14px;
+  color: white;
+  background: var(--charcoal);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.help-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.help-grid section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff8ec;
+}
+
+.help-grid h3,
+.help-grid p {
+  margin: 0;
+}
+
+.help-grid h3 {
+  color: var(--copper);
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.help-grid p {
+  margin-top: 4px;
+  color: var(--night);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
 .selectors {
   display: grid;
   grid-template-columns: 1fr;
@@ -547,7 +626,34 @@ h1 {
 
   .icon-button {
     min-height: 42px;
-    min-width: 58px;
+    min-width: 54px;
+    padding: 0 8px;
+    font-size: 0.82rem;
+  }
+
+  .help-panel {
+    padding: 10px;
+  }
+
+  .help-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .help-grid {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .help-grid section {
+    padding: 8px;
+  }
+
+  .help-grid h3 {
+    font-size: 0.78rem;
+  }
+
+  .help-grid p {
+    font-size: 0.82rem;
   }
 
   .character-zone {

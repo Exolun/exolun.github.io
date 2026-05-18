@@ -155,6 +155,9 @@ const elements = {
   clearButton: document.querySelector("#clearButton"),
   submitButton: document.querySelector("#submitButton"),
   newRoundButton: document.querySelector("#newRoundButton"),
+  helpButton: document.querySelector("#helpButton"),
+  helpDialog: document.querySelector("#helpDialog"),
+  helpCloseButton: document.querySelector("#helpCloseButton"),
   soundButton: document.querySelector("#soundButton"),
   talkButton: document.querySelector("#talkButton"),
   promptText: document.querySelector("#promptText"),
@@ -441,6 +444,24 @@ function toggleSound() {
   if (state.soundEnabled) {
     playCue("toggle");
   }
+}
+
+function openHelp() {
+  if (elements.helpDialog.showModal) {
+    elements.helpDialog.showModal();
+    return;
+  }
+
+  elements.helpDialog.setAttribute("open", "");
+}
+
+function closeHelp() {
+  if (elements.helpDialog.close) {
+    elements.helpDialog.close();
+    return;
+  }
+
+  elements.helpDialog.removeAttribute("open");
 }
 
 function getAudioContext() {
@@ -804,6 +825,13 @@ elements.clearButton.addEventListener("click", () => {
 
 elements.submitButton.addEventListener("click", submitAnswer);
 elements.newRoundButton.addEventListener("click", startMode);
+elements.helpButton.addEventListener("click", openHelp);
+elements.helpCloseButton.addEventListener("click", closeHelp);
+elements.helpDialog.addEventListener("click", (event) => {
+  if (event.target === elements.helpDialog) {
+    closeHelp();
+  }
+});
 elements.soundButton.addEventListener("click", toggleSound);
 
 elements.answerInput.addEventListener("keydown", (event) => {

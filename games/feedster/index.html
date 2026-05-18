@@ -22,6 +22,7 @@
           <h1 id="gameTitle">Snack Math</h1>
         </div>
         <div class="title-actions">
+          <button class="icon-button icon-button-secondary" id="helpButton" type="button" aria-label="Open Help">Help</button>
           <button class="icon-button icon-button-secondary" id="soundButton" type="button" aria-label="Turn sound on" aria-pressed="false">Sound</button>
           <button class="icon-button" id="newRoundButton" type="button" aria-label="New Round">New</button>
         </div>
@@ -105,6 +106,34 @@
       </div>
     </section>
   </main>
+
+  <dialog class="help-dialog" id="helpDialog" aria-labelledby="helpTitle">
+    <div class="help-panel">
+      <div class="help-header">
+        <h2 id="helpTitle">How to Play</h2>
+        <button class="dialog-close" id="helpCloseButton" type="button" aria-label="Close Help">Close</button>
+      </div>
+
+      <div class="help-grid">
+        <section>
+          <h3>Scarfing</h3>
+          <p>Add enough favorite food to reach Feedster's target number.</p>
+        </section>
+        <section>
+          <h3>Yuckies</h3>
+          <p>Take away the yucky food and answer how many are left.</p>
+        </section>
+        <section>
+          <h3>FEAST</h3>
+          <p>Solve a quick mix of snack and yucky problems before time runs out.</p>
+        </section>
+        <section>
+          <h3>Difficulty</h3>
+          <p>Easy uses small counts, Medium reaches 20, and Hard uses 3-digit snack math.</p>
+        </section>
+      </div>
+    </div>
+  </dialog>
 
   <div class="orientation-guard" aria-live="polite">
     <div class="orientation-card">

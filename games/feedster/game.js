@@ -30,13 +30,13 @@ const DIFFICULTIES = {
     scarfing: {
       targetMin: 4,
       targetMax: 10,
-      currentMin: 0,
-      answerMin: 0
+      currentMin: 1,
+      answerMin: 1
     },
     yuckies: {
       startMin: 1,
       startMax: 10,
-      removeMin: 0,
+      removeMin: 1,
       answerMin: 0
     },
     feastRounds: 5,
@@ -196,6 +196,34 @@ function writeStoredValue(key, value) {
   } catch {
     // Local storage can be unavailable in private or locked-down contexts.
   }
+}
+
+function isTouchPrimaryInput() {
+  return window.matchMedia?.("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+}
+
+function syncAnswerInputMode() {
+  const touchPrimary = isTouchPrimaryInput();
+
+  elements.answerInput.readOnly = touchPrimary;
+  elements.answerInput.inputMode = touchPrimary ? "none" : "numeric";
+  elements.answerInput.setAttribute("inputmode", touchPrimary ? "none" : "numeric");
+  elements.answerInput.setAttribute("aria-readonly", String(touchPrimary));
+  elements.answerInput.title = touchPrimary
+    ? "Use the number buttons below."
+    : "Type an answer or use the number buttons.";
+
+  if (touchPrimary && document.activeElement === elements.answerInput) {
+    elements.answerInput.blur();
+  }
+}
+
+function focusAnswerInput(options = {}) {
+  if (isTouchPrimaryInput()) {
+    return;
+  }
+
+  elements.answerInput.focus({ preventScroll: true, ...options });
 }
 
 function randomInt(min, max) {
@@ -522,7 +550,7 @@ function newProblem() {
   renderPlate(state.currentProblem);
   updateLabels();
   startTimer();
-  elements.answerInput.focus({ preventScroll: true });
+  focusAnswerInput();
 }
 
 function startMode() {
@@ -635,7 +663,7 @@ function appendNumber(number) {
   }
 
   elements.answerInput.value = `${current}${number}`;
-  elements.answerInput.focus({ preventScroll: true });
+  focusAnswerInput();
 }
 
 function setupSpeechRecognition() {
@@ -771,7 +799,7 @@ elements.numberButtons.forEach((button) => {
 
 elements.clearButton.addEventListener("click", () => {
   elements.answerInput.value = "";
-  elements.answerInput.focus({ preventScroll: true });
+  focusAnswerInput();
 });
 
 elements.submitButton.addEventListener("click", submitAnswer);
@@ -784,6 +812,15 @@ elements.answerInput.addEventListener("keydown", (event) => {
   }
 });
 
+elements.answerInput.addEventListener("pointerdown", (event) => {
+  if (!isTouchPrimaryInput() || event.pointerType === "mouse") {
+    return;
+  }
+
+  event.preventDefault();
+  elements.answerInput.blur();
+});
+
 elements.talkButton.addEventListener("click", () => {
   if (!state.speechRecognizer || state.isListening) {
     return;
@@ -791,6 +828,18 @@ elements.talkButton.addEventListener("click", () => {
 
   state.speechRecognizer.start();
 });
+
+syncAnswerInputMode();
+
+if (window.matchMedia) {
+  const pointerQuery = window.matchMedia("(pointer: coarse)");
+
+  if (pointerQuery.addEventListener) {
+    pointerQuery.addEventListener("change", syncAnswerInputMode);
+  } else if (pointerQuery.addListener) {
+    pointerQuery.addListener(syncAnswerInputMode);
+  }
+}
 
 setupSpeechRecognition();
 updateSoundButton();

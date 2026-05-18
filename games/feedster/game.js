@@ -92,6 +92,8 @@ const DIFFICULTY_HINTS = {
   hard: "Hard: 3-digit snack math"
 };
 
+const FEAST_TIMEOUT_PAUSE_MS = 1600;
+
 const SINGULAR_FOODS = {
   cookies: "cookie",
   cupcakes: "cupcake",
@@ -610,7 +612,7 @@ function startTimer() {
       recordResult(false);
       elements.answerInput.value = "";
       handleIncorrect("Time. Feedster is still chomping.");
-      window.setTimeout(nextFeastProblem, 850);
+      window.setTimeout(nextFeastProblem, FEAST_TIMEOUT_PAUSE_MS);
     }
   }, 1000);
 }

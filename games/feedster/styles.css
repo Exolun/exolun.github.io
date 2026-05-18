@@ -135,8 +135,9 @@ h1 {
 
 .icon-button {
   flex: 0 0 auto;
-  min-width: 64px;
+  min-width: 58px;
   min-height: 48px;
+  padding: 0 10px;
   border-radius: 8px;
   color: white;
   background: var(--charcoal);
@@ -150,6 +151,12 @@ h1 {
 .icon-button-secondary[aria-pressed="true"] {
   color: white;
   background: var(--blue);
+}
+
+.icon-button:disabled {
+  color: var(--muted);
+  background: #ead6b6;
+  cursor: default;
 }
 
 .help-dialog {
@@ -626,9 +633,9 @@ h1 {
 
   .icon-button {
     min-height: 42px;
-    min-width: 54px;
-    padding: 0 8px;
-    font-size: 0.82rem;
+    min-width: 46px;
+    padding: 0 6px;
+    font-size: 0.76rem;
   }
 
   .help-panel {

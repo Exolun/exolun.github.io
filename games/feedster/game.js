@@ -121,6 +121,7 @@ const ACTIVE_YUCKY_FOODS = YUCKY_FOODS.filter((food) => FOOD_IMAGES[food]);
 
 const STORAGE_KEYS = {
   sound: "feedsterSoundEnabled",
+  problemSpeech: "feedsterProblemSpeechEnabled",
   bestStreak: "feedsterBestStreak"
 };
 
@@ -138,6 +139,9 @@ const state = {
   isListening: false,
   isAdvancing: false,
   soundEnabled: readStoredBoolean(STORAGE_KEYS.sound, false),
+  canSpeak: "speechSynthesis" in window,
+  problemSpeechEnabled: readStoredBoolean(STORAGE_KEYS.problemSpeech, "speechSynthesis" in window),
+  problemSpeechReady: false,
   audioContext: null,
   stats: {
     correct: 0,
@@ -158,6 +162,7 @@ const elements = {
   helpButton: document.querySelector("#helpButton"),
   helpDialog: document.querySelector("#helpDialog"),
   helpCloseButton: document.querySelector("#helpCloseButton"),
+  readButton: document.querySelector("#readButton"),
   soundButton: document.querySelector("#soundButton"),
   talkButton: document.querySelector("#talkButton"),
   promptText: document.querySelector("#promptText"),
@@ -436,6 +441,19 @@ function updateSoundButton() {
   elements.soundButton.textContent = state.soundEnabled ? "Sound On" : "Sound";
 }
 
+function updateReadButton() {
+  elements.readButton.disabled = !state.canSpeak;
+  elements.readButton.setAttribute("aria-pressed", String(state.problemSpeechEnabled && state.canSpeak));
+  elements.readButton.setAttribute(
+    "aria-label",
+    state.problemSpeechEnabled ? "Turn problem reading off" : "Turn problem reading on"
+  );
+  elements.readButton.textContent = state.problemSpeechEnabled && state.canSpeak ? "Read On" : "Read";
+  elements.readButton.title = state.canSpeak
+    ? "Read each new problem out loud."
+    : "Problem reading is not supported in this browser.";
+}
+
 function toggleSound() {
   state.soundEnabled = !state.soundEnabled;
   writeStoredValue(STORAGE_KEYS.sound, state.soundEnabled);
@@ -443,6 +461,51 @@ function toggleSound() {
 
   if (state.soundEnabled) {
     playCue("toggle");
+  }
+}
+
+function markProblemSpeechReady() {
+  state.problemSpeechReady = true;
+}
+
+function speakMessage(message) {
+  if (!state.canSpeak || !state.problemSpeechEnabled || !message) {
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(message);
+  utterance.rate = 0.94;
+  utterance.pitch = 1.08;
+  utterance.volume = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function speakCurrentProblem() {
+  if (!state.currentProblem || !state.problemSpeechReady) {
+    return;
+  }
+
+  speakMessage(state.currentProblem.prompt);
+}
+
+function toggleProblemSpeech() {
+  if (!state.canSpeak) {
+    return;
+  }
+
+  markProblemSpeechReady();
+  state.problemSpeechEnabled = !state.problemSpeechEnabled;
+  writeStoredValue(STORAGE_KEYS.problemSpeech, state.problemSpeechEnabled);
+
+  if (!state.problemSpeechEnabled) {
+    window.speechSynthesis.cancel();
+  }
+
+  updateReadButton();
+
+  if (state.problemSpeechEnabled) {
+    speakCurrentProblem();
   }
 }
 
@@ -572,6 +635,7 @@ function newProblem() {
   updateLabels();
   startTimer();
   focusAnswerInput();
+  speakCurrentProblem();
 }
 
 function startMode() {
@@ -802,6 +866,7 @@ function parseSpokenNumber(transcript) {
 
 elements.modeButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    markProblemSpeechReady();
     state.mode = button.dataset.mode;
     startMode();
   });
@@ -809,6 +874,7 @@ elements.modeButtons.forEach((button) => {
 
 elements.difficultyButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    markProblemSpeechReady();
     state.difficulty = button.dataset.difficulty;
     startMode();
   });
@@ -823,8 +889,14 @@ elements.clearButton.addEventListener("click", () => {
   focusAnswerInput();
 });
 
-elements.submitButton.addEventListener("click", submitAnswer);
-elements.newRoundButton.addEventListener("click", startMode);
+elements.submitButton.addEventListener("click", () => {
+  markProblemSpeechReady();
+  submitAnswer();
+});
+elements.newRoundButton.addEventListener("click", () => {
+  markProblemSpeechReady();
+  startMode();
+});
 elements.helpButton.addEventListener("click", openHelp);
 elements.helpCloseButton.addEventListener("click", closeHelp);
 elements.helpDialog.addEventListener("click", (event) => {
@@ -832,10 +904,12 @@ elements.helpDialog.addEventListener("click", (event) => {
     closeHelp();
   }
 });
+elements.readButton.addEventListener("click", toggleProblemSpeech);
 elements.soundButton.addEventListener("click", toggleSound);
 
 elements.answerInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
+    markProblemSpeechReady();
     submitAnswer();
   }
 });
@@ -870,6 +944,7 @@ if (window.matchMedia) {
 }
 
 setupSpeechRecognition();
+updateReadButton();
 updateSoundButton();
 updateStats();
 startMode();

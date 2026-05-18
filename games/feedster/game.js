@@ -108,19 +108,6 @@ const SINGULAR_FOODS = {
   "brussels sprouts": "brussels sprout"
 };
 
-const FOOD_IMAGES = {
-  cookies: "assets/food/food_cookies.png",
-  cupcakes: "assets/food/food_cupcake.png",
-  donuts: "assets/food/food_donut.png",
-  berries: "assets/food/food_berries.png",
-  "pizza bites": "assets/food/food_pizza_bites.png",
-  "cheese cubes": "assets/food/food_cheese_cubes.png",
-  broccoli: "assets/food/food_broccoli.png"
-};
-
-const ACTIVE_FAVORITE_FOODS = FAVORITE_FOODS.filter((food) => FOOD_IMAGES[food]);
-const ACTIVE_YUCKY_FOODS = YUCKY_FOODS.filter((food) => FOOD_IMAGES[food]);
-
 const STORAGE_KEYS = {
   sound: "feedsterSoundEnabled",
   problemSpeech: "feedsterProblemSpeechEnabled",
@@ -258,7 +245,7 @@ function buildScarfingProblem() {
   const maxAnswer = Math.min(config.answerMax || target, target - config.currentMin);
   const answer = randomInt(config.answerMin, maxAnswer);
   const current = target - answer;
-  const food = sample(ACTIVE_FAVORITE_FOODS);
+  const food = sample(FAVORITE_FOODS);
 
   return {
     type: "scarfing",
@@ -278,7 +265,7 @@ function buildYuckiesProblem() {
   const maxRemove = Math.min(config.removeMax || start, start - config.answerMin);
   const remove = randomInt(config.removeMin, maxRemove);
   const answer = start - remove;
-  const food = sample(ACTIVE_YUCKY_FOODS);
+  const food = sample(YUCKY_FOODS);
 
   return {
     type: "yuckies",
@@ -311,8 +298,6 @@ function setSprite(kind) {
 
 function renderPlate(problem) {
   const count = problem.shownCount;
-  const visibleCount = Math.min(count, 12);
-  const hiddenCount = Math.max(0, count - visibleCount);
   const fragment = document.createDocumentFragment();
 
   elements.plateItems.innerHTML = "";
@@ -332,32 +317,6 @@ function renderPlate(problem) {
   }
 
   fragment.appendChild(facts);
-
-  if (count === 0) {
-    const empty = document.createElement("span");
-    empty.className = "food-token food-token-empty";
-    empty.textContent = "empty plate";
-    fragment.appendChild(empty);
-  }
-
-  for (let index = 0; index < visibleCount; index += 1) {
-    fragment.appendChild(createFoodToken(problem.food));
-  }
-
-  if (hiddenCount > 0) {
-    const item = document.createElement("span");
-    item.className = "food-token food-token-count";
-    item.textContent = `+${hiddenCount}`;
-    fragment.appendChild(item);
-  }
-
-  if (problem.type === "yuckies") {
-    const removeBadge = document.createElement("span");
-    removeBadge.className = "remove-badge";
-    removeBadge.textContent = `take away ${problem.removeCount}`;
-    fragment.appendChild(removeBadge);
-  }
-
   elements.plateItems.appendChild(fragment);
 }
 
@@ -366,30 +325,6 @@ function createFact(label, value) {
   fact.className = "plate-fact";
   fact.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
   return fact;
-}
-
-function createFoodToken(food) {
-  const item = document.createElement("span");
-  const foodName = foodLabel(food, 1);
-  const image = FOOD_IMAGES[food];
-
-  item.className = "food-token";
-  item.setAttribute("aria-label", foodName);
-  item.title = foodName;
-
-  if (!image) {
-    item.textContent = foodName;
-    return item;
-  }
-
-  item.classList.add("food-token-image");
-
-  const img = document.createElement("img");
-  img.src = image;
-  img.alt = "";
-  img.setAttribute("aria-hidden", "true");
-  item.appendChild(img);
-  return item;
 }
 
 function updateSelectorState() {
@@ -440,7 +375,7 @@ function recordResult(isCorrect) {
 function updateSoundButton() {
   elements.soundButton.setAttribute("aria-pressed", String(state.soundEnabled));
   elements.soundButton.setAttribute("aria-label", state.soundEnabled ? "Turn sound off" : "Turn sound on");
-  elements.soundButton.textContent = state.soundEnabled ? "Sound On" : "Sound";
+  elements.soundButton.title = state.soundEnabled ? "Sound effects on" : "Sound effects off";
 }
 
 function updateReadButton() {
@@ -450,9 +385,10 @@ function updateReadButton() {
     "aria-label",
     state.problemSpeechEnabled ? "Turn problem reading off" : "Turn problem reading on"
   );
-  elements.readButton.textContent = state.problemSpeechEnabled && state.canSpeak ? "Read On" : "Read";
   elements.readButton.title = state.canSpeak
-    ? "Read each new problem out loud."
+    ? state.problemSpeechEnabled
+      ? "Problem reading on"
+      : "Problem reading off"
     : "Problem reading is not supported in this browser.";
 }
 

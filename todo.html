@@ -230,25 +230,41 @@
       position: relative;
     }
 
-    .task label {
+    .task-row {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
       gap: 13px;
       min-height: 58px;
       padding: 10px 14px;
       border: 2px solid var(--line);
       border-radius: 16px;
       background: #fff;
-      cursor: pointer;
-      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+      transition: border-color 140ms ease, background 140ms ease;
     }
 
-    .task label:hover {
-      transform: translateY(-1px);
+    .task-row:focus-within,
+    .task-row:hover {
       border-color: var(--blue);
     }
 
-    .task input {
+    .check-group {
+      display: flex;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      gap: 2px;
+    }
+
+    .check-control {
+      display: grid;
+      padding: 3px;
+      place-items: center;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .check-control input {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -271,24 +287,29 @@
       transition: background 140ms ease, color 140ms ease, transform 140ms ease;
     }
 
-    .task input:focus-visible + .checkmark {
+    .check-control:hover .checkmark {
+      transform: translateY(-1px);
+    }
+
+    .check-control input:focus-visible + .checkmark {
       outline: 4px solid rgba(48, 168, 213, 0.35);
       outline-offset: 3px;
     }
 
-    .task input:checked + .checkmark {
+    .check-control input:checked + .checkmark {
       color: var(--ink);
       background: var(--green);
       transform: rotate(-5deg) scale(1.04);
     }
 
-    .task input:checked ~ .task-name {
+    .task.complete .task-name {
       color: var(--muted);
       text-decoration: line-through;
       text-decoration-thickness: 2px;
     }
 
     .task-name {
+      flex: 1 1 130px;
       font-size: 1.02rem;
       font-weight: 800;
       line-height: 1.25;
@@ -374,9 +395,9 @@
         <div class="progress-card">
           <div class="progress-row">
             <strong>Adventure progress</strong>
-            <span id="progressText" aria-live="polite">0 of 20 done</span>
+            <span id="progressText" aria-live="polite">0 of 32 done</span>
           </div>
-          <div class="progress-track" role="progressbar" aria-label="Completed activities" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
+          <div class="progress-track" role="progressbar" aria-label="Completed activities" aria-valuemin="0" aria-valuemax="32" aria-valuenow="0">
             <div class="progress-fill" id="progressFill"></div>
           </div>
         </div>
@@ -396,20 +417,20 @@
       {
         title: "To-Do",
         items: [
-          ["playground", "Playground"],
-          ["dog-park", "Dog park (wash dog)"],
+          ["playground", "Playground", 3],
+          ["dog-park", "Dog park (wash dog)", 2],
           ["hide-and-seek", "Hide & seek"],
-          ["treasure-map", "Treasure map"],
+          ["treasure-map", "Treasure map", 2],
           ["cardboard-house", "Cardboard house"],
           ["wood-project", "Wood project"],
           ["remote-control-cars", "Remote control cars"],
-          ["library", "Library"],
+          ["library", "Library", 2],
           ["water-plants", "Water plants"],
-          ["walk-dogs", "Walk dogs"],
+          ["walk-dogs", "Walk dogs", 6],
           ["swing-set-picnic", "Swing set picnic"],
           ["arts-and-crafts", "Arts & crafts"],
           ["quiet-time", "Quiet time (pickup first)"],
-          ["field-walk", "The field walk"]
+          ["field-walk", "The field walk", 3]
         ]
       },
       {
@@ -426,7 +447,16 @@
     ];
 
     const storageKey = "mikelikescoding-kids-todo-v1";
-    const allItems = groups.flatMap((group) => group.items);
+    function getCheckId(itemId, index) {
+      return index === 0 ? itemId : `${itemId}-${index + 1}`;
+    }
+
+    const allCheckIds = groups.flatMap((group) =>
+      group.items.flatMap(([id, , count = 1]) =>
+        Array.from({ length: count }, (_, index) => getCheckId(id, index))
+      )
+    );
+    const validCheckIds = new Set(allCheckIds);
     const lists = document.querySelector("#lists");
     const progressText = document.querySelector("#progressText");
     const progressFill = document.querySelector("#progressFill");
@@ -437,7 +467,7 @@
     function loadCompleted() {
       try {
         const stored = JSON.parse(localStorage.getItem(storageKey));
-        return new Set(Array.isArray(stored) ? stored : []);
+        return new Set(Array.isArray(stored) ? stored.filter((id) => validCheckIds.has(id)) : []);
       } catch {
         return new Set();
       }
@@ -468,15 +498,28 @@
         `;
 
         const taskList = section.querySelector(".task-list");
-        group.items.forEach(([id, name]) => {
-          const item = document.createElement("li");
-          item.className = "task";
-          item.innerHTML = `
-            <label>
-              <input type="checkbox" data-id="${id}" ${completed.has(id) ? "checked" : ""}>
+        group.items.forEach(([id, name, count = 1]) => {
+          const checkIds = Array.from({ length: count }, (_, index) => getCheckId(id, index));
+          const checkboxes = checkIds.map((checkId, index) => `
+            <label class="check-control">
+              <input
+                type="checkbox"
+                data-id="${checkId}"
+                aria-label="${name}, check ${index + 1} of ${count}"
+                ${completed.has(checkId) ? "checked" : ""}
+              >
               <span class="checkmark" aria-hidden="true">✓</span>
-              <span class="task-name">${name}</span>
             </label>
+          `).join("");
+          const item = document.createElement("li");
+          item.className = `task${checkIds.every((checkId) => completed.has(checkId)) ? " complete" : ""}`;
+          item.innerHTML = `
+            <div class="task-row">
+              <span class="task-name">${name}</span>
+              <div class="check-group" aria-label="${count} checkmark${count === 1 ? "" : "s"} for ${name}">
+                ${checkboxes}
+              </div>
+            </div>
           `;
           taskList.append(item);
         });
@@ -489,7 +532,7 @@
 
     function updateProgress(completed) {
       const done = completed.size;
-      const total = allItems.length;
+      const total = allCheckIds.length;
       const percent = Math.round((done / total) * 100);
 
       progressText.textContent = `${done} of ${total} done`;
@@ -518,6 +561,8 @@
         completed.delete(checkbox.dataset.id);
       }
       saveCompleted(completed);
+      const task = checkbox.closest(".task");
+      task.classList.toggle("complete", [...task.querySelectorAll("input")].every((input) => input.checked));
       updateProgress(completed);
     });
 

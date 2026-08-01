@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A family fun checklist for the kids.">
+  <meta name="theme-color" content="#173b57">
+  <title>Kids' To-Do List</title>
+  <style>
+    :root {
+      --ink: #173b57;
+      --muted: #557187;
+      --paper: #fffdf4;
+      --line: #c9dce6;
+      --blue: #30a8d5;
+      --blue-dark: #157ca7;
+      --yellow: #ffd75e;
+      --coral: #ff796d;
+      --green: #43b883;
+      --shadow: 0 18px 50px rgba(23, 59, 87, 0.16);
+      --font: "Trebuchet MS", "Aptos", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--font);
+      background:
+        radial-gradient(circle at 8% 6%, rgba(255, 215, 94, 0.75), transparent 22rem),
+        radial-gradient(circle at 94% 18%, rgba(255, 121, 109, 0.4), transparent 20rem),
+        linear-gradient(160deg, #e8f8ff 0%, #fff8dc 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.32;
+      background-image: radial-gradient(circle, rgba(23, 59, 87, 0.28) 1.25px, transparent 1.25px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(to bottom, #000, transparent 75%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      position: relative;
+      width: min(100% - 28px, 940px);
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .home-link {
+      color: var(--ink);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .home-link:hover,
+    .home-link:focus-visible {
+      text-decoration: underline;
+    }
+
+    .save-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 48px);
+      border: 3px solid var(--ink);
+      border-radius: 32px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "★";
+      position: absolute;
+      top: -30px;
+      right: 22px;
+      color: var(--yellow);
+      font-size: clamp(8rem, 24vw, 14rem);
+      line-height: 1;
+      transform: rotate(12deg);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue-dark);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(2.4rem, 9vw, 5.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.055em;
+    }
+
+    .intro {
+      max-width: 52ch;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.16rem);
+      line-height: 1.55;
+    }
+
+    .progress-card {
+      margin-top: 24px;
+      padding: 18px;
+      border: 2px solid var(--ink);
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .progress-row strong {
+      font-size: 1.08rem;
+    }
+
+    #progressText {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .progress-track {
+      height: 16px;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: #e9f1f5;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-right: 2px solid var(--ink);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), #72d7a8);
+      transition: width 220ms ease;
+    }
+
+    .lists {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .list-card {
+      padding: clamp(18px, 4vw, 28px);
+      border: 3px solid var(--ink);
+      border-radius: 28px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .list-card:nth-child(2) {
+      align-self: start;
+      background: #f3fbff;
+    }
+
+    .list-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 18px;
+      font-size: 1.35rem;
+    }
+
+    .number {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: var(--yellow);
+      font-size: 1rem;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 11px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .task {
+      position: relative;
+    }
+
+    .task label {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 58px;
+      padding: 10px 14px;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .task label:hover {
+      transform: translateY(-1px);
+      border-color: var(--blue);
+    }
+
+    .task input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .checkmark {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 3px solid var(--ink);
+      border-radius: 9px;
+      background: #fff;
+      color: transparent;
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+      transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+    }
+
+    .task input:focus-visible + .checkmark {
+      outline: 4px solid rgba(48, 168, 213, 0.35);
+      outline-offset: 3px;
+    }
+
+    .task input:checked + .checkmark {
+      color: var(--ink);
+      background: var(--green);
+      transform: rotate(-5deg) scale(1.04);
+    }
+
+    .task input:checked ~ .task-name {
+      color: var(--muted);
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+    }
+
+    .task-name {
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 20px;
+      padding: 18px 4px 0;
+    }
+
+    .celebration {
+      margin: 0;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .reset-button {
+      min-height: 46px;
+      padding: 10px 17px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .reset-button:hover,
+    .reset-button:focus-visible {
+      background: var(--yellow);
+    }
+
+    .reset-button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+
+    @media (max-width: 720px) {
+      .lists {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar,
+      .actions {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero::after {
+        right: -26px;
+        opacity: 0.7;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <a class="home-link" href="index.html">← Site home</a>
+      <p class="save-note">Progress saves on this device.</p>
+    </div>
+
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-content">
+        <p class="eyebrow">Choose an adventure</p>
+        <h1 id="pageTitle">Kids' To-Do List</h1>
+        <p class="intro">Pick something fun, make it happen, and check it off. Every little adventure counts!</p>
+
+        <div class="progress-card">
+          <div class="progress-row">
+            <strong>Adventure progress</strong>
+            <span id="progressText" aria-live="polite">0 of 20 done</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Completed activities" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lists" id="lists"></div>
+
+    <div class="actions">
+      <p class="celebration" id="celebration" aria-live="polite">Let's make some memories.</p>
+      <button class="reset-button" id="resetButton" type="button">Reset all checkmarks</button>
+    </div>
+  </main>
+
+  <script>
+    const groups = [
+      {
+        title: "To-Do",
+        items: [
+          ["playground", "Playground"],
+          ["dog-park", "Dog park (wash dog)"],
+          ["hide-and-seek", "Hide & seek"],
+          ["treasure-map", "Treasure map"],
+          ["cardboard-house", "Cardboard house"],
+          ["wood-project", "Wood project"],
+          ["remote-control-cars", "Remote control cars"],
+          ["library", "Library"],
+          ["water-plants", "Water plants"],
+          ["walk-dogs", "Walk dogs"],
+          ["swing-set-picnic", "Swing set picnic"],
+          ["arts-and-crafts", "Arts & crafts"],
+          ["quiet-time", "Quiet time (pickup first)"],
+          ["field-walk", "The field walk"]
+        ]
+      },
+      {
+        title: "To-Do #2",
+        items: [
+          ["pick-blackberries", "Pick blackberries"],
+          ["pick-strawberries", "Pick strawberries"],
+          ["dog-agility-course", "Dog agility course"],
+          ["watch-american-ninja", "Watch American Ninja"],
+          ["candlestick-bowling", "Candlestick bowling"],
+          ["straw-and-salt-ice-cream", "Straw & Salt ice cream"]
+        ]
+      }
+    ];
+
+    const storageKey = "mikelikescoding-kids-todo-v1";
+    const allItems = groups.flatMap((group) => group.items);
+    const lists = document.querySelector("#lists");
+    const progressText = document.querySelector("#progressText");
+    const progressFill = document.querySelector("#progressFill");
+    const progressTrack = document.querySelector(".progress-track");
+    const celebration = document.querySelector("#celebration");
+    const resetButton = document.querySelector("#resetButton");
+
+    function loadCompleted() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(storageKey));
+        return new Set(Array.isArray(stored) ? stored : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function saveCompleted(completed) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify([...completed]));
+      } catch {
+        document.querySelector(".save-note").textContent = "Checkmarks cannot be saved in this browser.";
+      }
+    }
+
+    function render() {
+      const completed = loadCompleted();
+      lists.innerHTML = "";
+
+      groups.forEach((group, groupIndex) => {
+        const section = document.createElement("section");
+        section.className = "list-card";
+        section.setAttribute("aria-labelledby", `group-${groupIndex}`);
+        section.innerHTML = `
+          <h2 class="list-heading" id="group-${groupIndex}">
+            <span class="number" aria-hidden="true">${groupIndex + 1}</span>
+            ${group.title}
+          </h2>
+          <ul class="task-list"></ul>
+        `;
+
+        const taskList = section.querySelector(".task-list");
+        group.items.forEach(([id, name]) => {
+          const item = document.createElement("li");
+          item.className = "task";
+          item.innerHTML = `
+            <label>
+              <input type="checkbox" data-id="${id}" ${completed.has(id) ? "checked" : ""}>
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-name">${name}</span>
+            </label>
+          `;
+          taskList.append(item);
+        });
+
+        lists.append(section);
+      });
+
+      updateProgress(completed);
+    }
+
+    function updateProgress(completed) {
+      const done = completed.size;
+      const total = allItems.length;
+      const percent = Math.round((done / total) * 100);
+
+      progressText.textContent = `${done} of ${total} done`;
+      progressFill.style.width = `${percent}%`;
+      progressTrack.setAttribute("aria-valuenow", done);
+
+      if (done === total) {
+        celebration.textContent = "★ You did every adventure! Amazing!";
+      } else if (done >= Math.ceil(total / 2)) {
+        celebration.textContent = "You're on a roll—keep adventuring!";
+      } else if (done > 0) {
+        celebration.textContent = "Great start! What's next?";
+      } else {
+        celebration.textContent = "Let's make some memories.";
+      }
+    }
+
+    lists.addEventListener("change", (event) => {
+      const checkbox = event.target.closest("input[type='checkbox']");
+      if (!checkbox) return;
+
+      const completed = loadCompleted();
+      if (checkbox.checked) {
+        completed.add(checkbox.dataset.id);
+      } else {
+        completed.delete(checkbox.dataset.id);
+      }
+      saveCompleted(completed);
+      updateProgress(completed);
+    });
+
+    resetButton.addEventListener("click", () => {
+      if (!confirm("Clear every checkmark and start over?")) return;
+      saveCompleted(new Set());
+      render();
+    });
+
+    window.addEventListener("storage", (event) => {
+      if (event.key === storageKey) render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

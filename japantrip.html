@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A live, day-by-day itinerary for Monica and Michael's 2026 trip to Japan.">
+  <meta name="theme-color" content="#15314b">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Japan, day by day. · Monica &amp; Michael">
+  <meta property="og:description" content="Our live day-by-day itinerary for Japan, August 2–12, 2026.">
+  <meta property="og:url" content="https://mikelikescoding.com/japantrip.html">
+  <meta property="og:image" content="https://mikelikescoding.com/japantrip-og.png">
+  <meta property="og:image:width" content="1734">
+  <meta property="og:image:height" content="907">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Japan 2026 · Monica &amp; Michael</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4efe4;
+      --paper-deep: #e9e0d1;
+      --ink: #142a3c;
+      --muted: #65727a;
+      --indigo: #15314b;
+      --indigo-soft: #284d67;
+      --vermilion: #d94a34;
+      --vermilion-dark: #a92e22;
+      --gold: #d9ad59;
+      --line: rgba(20, 42, 60, 0.16);
+      --white: #fffdf8;
+      --shadow: 0 18px 50px rgba(31, 39, 43, 0.11);
+      --radius: 24px;
+      --sans: "Aptos", "Segoe UI Variable Text", "Segoe UI", sans-serif;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 88px;
+    }
+
+    body {
+      margin: 0;
+      min-width: 300px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% -5%, rgba(217, 74, 52, 0.13), transparent 25rem),
+        linear-gradient(90deg, transparent 49.8%, rgba(21, 49, 75, 0.025) 50%, transparent 50.2%),
+        var(--paper);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: var(--white);
+      background: var(--indigo);
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .page-shell {
+      width: min(100% - 32px, 1160px);
+      margin: 0 auto;
+      padding: 28px 0 80px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 530px;
+      padding: clamp(30px, 6vw, 72px);
+      border-radius: 32px;
+      color: var(--white);
+      background:
+        linear-gradient(125deg, rgba(255, 255, 255, 0.05), transparent 40%),
+        var(--indigo);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "旅";
+      position: absolute;
+      z-index: -1;
+      right: clamp(-28px, 1vw, 30px);
+      bottom: -92px;
+      color: rgba(255, 255, 255, 0.045);
+      font-family: var(--serif);
+      font-size: clamp(20rem, 55vw, 38rem);
+      line-height: 1;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 260px;
+      height: 260px;
+      top: -120px;
+      right: -90px;
+      border: 38px solid rgba(217, 74, 52, 0.85);
+      border-radius: 50%;
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 24px;
+      color: #f3cfa0;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 38px;
+      height: 2px;
+      background: var(--vermilion);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(3.6rem, 10vw, 7.8rem);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: 0.83;
+    }
+
+    .hero-subtitle {
+      max-width: 610px;
+      margin: 26px 0 0;
+      color: #d9e4e9;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+    }
+
+    .route-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 34px;
+      overflow-x: auto;
+      color: #f9f5ed;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      scrollbar-width: none;
+    }
+
+    .route-strip::-webkit-scrollbar { display: none; }
+
+    .route-stop { white-space: nowrap; }
+
+    .route-line {
+      flex: 1 0 22px;
+      min-width: 22px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .status-card {
+      position: relative;
+      z-index: 2;
+      width: min(calc(100% - 40px), 1000px);
+      margin: -74px auto 0;
+      padding: 24px;
+      border: 1px solid rgba(21, 49, 75, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.96);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(250px, 0.8fr);
+      gap: 22px;
+      align-items: end;
+    }
+
+    .status-label,
+    .section-kicker {
+      margin: 0 0 6px;
+      color: var(--vermilion-dark);
+      font-size: 0.73rem;
+      font-weight: 850;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .status-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(1.65rem, 4vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.04;
+    }
+
+    .status-copy {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .clock-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .clock {
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f8f4eb;
+    }
+
+    .clock span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .clock strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 1.04rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-track {
+      height: 5px;
+      margin-top: 20px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--paper-deep);
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--vermilion), var(--gold));
+      transition: width 500ms ease;
+    }
+
+    .status-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .primary-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 17px;
+      color: white;
+      background: var(--vermilion);
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary-button:hover { background: var(--vermilion-dark); }
+    .primary-button:focus-visible { outline: 3px solid rgba(217, 74, 52, 0.28); outline-offset: 3px; }
+
+    .timezone-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .itinerary-layout {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: clamp(26px, 5vw, 66px);
+      margin-top: 70px;
+    }
+
+    .day-nav {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+    }
+
+    .day-nav-title {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .day-nav-list {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .day-nav a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .day-nav a:hover,
+    .day-nav a:focus-visible {
+      color: var(--ink);
+      background: rgba(255, 253, 248, 0.7);
+    }
+
+    .day-nav a.is-today {
+      color: white;
+      background: var(--indigo);
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--vermilion);
+      opacity: 0;
+    }
+
+    .is-today .nav-dot { opacity: 1; }
+
+    .days { min-width: 0; }
+
+    .itinerary-heading { margin-bottom: 32px; }
+
+    .itinerary-heading h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 6vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 0.95;
+    }
+
+    .itinerary-heading p:last-child {
+      max-width: 62ch;
+      margin: 16px 0 0;
+      color: var(--muted);
+    }
+
+    .day-card {
+      position: relative;
+      margin: 0 0 22px;
+      padding: clamp(22px, 4vw, 36px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.78);
+      box-shadow: 0 10px 34px rgba(31, 39, 43, 0.055);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .day-card.is-today {
+      border-color: rgba(217, 74, 52, 0.55);
+      box-shadow: 0 16px 44px rgba(131, 50, 36, 0.12);
+    }
+
+    .day-card.is-today::before {
+      content: "Today";
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: white;
+      background: var(--vermilion);
+      font-size: 0.65rem;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .day-header {
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      padding-right: 56px;
+    }
+
+    .date-block {
+      padding: 9px;
+      border-radius: 14px;
+      color: white;
+      background: var(--indigo);
+      text-align: center;
+    }
+
+    .date-block span {
+      display: block;
+      color: #f1c98e;
+      font-size: 0.68rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .date-block strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .day-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-weight: 600;
+      line-height: 1.05;
+    }
+
+    .day-place {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .schedule {
+      position: relative;
+      display: grid;
+      gap: 0;
+      margin: 28px 0 0 40px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .schedule::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      bottom: 14px;
+      left: 4px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .event {
+      position: relative;
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 18px;
+      padding: 0 0 24px 26px;
+    }
+
+    .event:last-child { padding-bottom: 0; }
+
+    .event::before {
+      content: "";
+      position: absolute;
+      top: 7px;
+      left: 0;
+      width: 9px;
+      height: 9px;
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      background: #96a0a5;
+      box-shadow: 0 0 0 1px rgba(20, 42, 60, 0.15);
+    }
+
+    .event.is-current::before {
+      background: var(--vermilion);
+      box-shadow: 0 0 0 5px rgba(217, 74, 52, 0.15);
+      animation: pulse 2s infinite;
+    }
+
+    .event.is-current .event-title { color: var(--vermilion-dark); }
+
+    @keyframes pulse {
+      50% { box-shadow: 0 0 0 9px rgba(217, 74, 52, 0); }
+    }
+
+    .event-time {
+      padding-top: 1px;
+      color: var(--indigo-soft);
+      font-size: 0.8rem;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+
+    .event-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .event-copy {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .detail-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .chip {
+      display: inline-flex;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--indigo-soft);
+      background: #f8f4eb;
+      font-size: 0.72rem;
+      font-weight: 750;
+    }
+
+    .trip-note {
+      margin-top: 32px;
+      padding: 22px 24px;
+      border-left: 3px solid var(--gold);
+      border-radius: 0 16px 16px 0;
+      color: var(--muted);
+      background: rgba(255, 253, 248, 0.65);
+      font-size: 0.88rem;
+    }
+
+    .trip-note strong { color: var(--ink); }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 34px;
+      padding: 28px 0 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .footer p { margin: 0; }
+
+    @media (max-width: 820px) {
+      .page-shell { width: min(100% - 20px, 1160px); padding-top: 10px; }
+      .hero { min-height: 480px; border-radius: 22px; }
+      .status-card { width: calc(100% - 22px); margin-top: -58px; }
+      .status-grid { grid-template-columns: 1fr; }
+      .itinerary-layout { grid-template-columns: 1fr; margin-top: 48px; }
+      .day-nav {
+        position: sticky;
+        z-index: 5;
+        top: 0;
+        overflow-x: auto;
+        margin: 0 -10px;
+        padding: 9px 10px;
+        background: rgba(244, 239, 228, 0.94);
+        backdrop-filter: blur(12px);
+        scrollbar-width: none;
+      }
+      .day-nav::-webkit-scrollbar { display: none; }
+      .day-nav-title { display: none; }
+      .day-nav-list { display: flex; width: max-content; }
+      .day-nav a { min-width: 64px; justify-content: center; }
+      .nav-dot { display: none; }
+    }
+
+    @media (max-width: 580px) {
+      .hero { min-height: 430px; padding: 28px 23px 100px; }
+      .hero::after { width: 190px; height: 190px; border-width: 28px; }
+      .status-card { padding: 20px; }
+      .clock-grid { grid-template-columns: 1fr; }
+      .day-card { padding: 21px 18px; }
+      .day-card.is-today::before { top: 14px; right: 14px; }
+      .day-header { grid-template-columns: 64px minmax(0, 1fr); gap: 13px; padding-right: 34px; }
+      .date-block strong { font-size: 1.55rem; }
+      .schedule { margin-left: 3px; }
+      .event { grid-template-columns: 1fr; gap: 3px; padding-left: 24px; }
+      .event-time { font-size: 0.76rem; }
+      .footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .event.is-current::before { animation: none; }
+      .progress-bar { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#itinerary">Skip to itinerary</a>
+
+  <main class="page-shell">
+    <header class="hero">
+      <p class="kicker">Monica &amp; Michael · 2026</p>
+      <h1>Japan,<br>day by day.</h1>
+      <p class="hero-subtitle">Eleven days from Seattle to Kyoto, Osaka and Tokyo—with every train, reservation and tiny adventure in one place.</p>
+      <div class="route-strip" aria-label="Trip route">
+        <span class="route-stop">Seattle</span><span class="route-line"></span>
+        <span class="route-stop">Tokyo</span><span class="route-line"></span>
+        <span class="route-stop">Kyoto</span><span class="route-line"></span>
+        <span class="route-stop">Osaka</span><span class="route-line"></span>
+        <span class="route-stop">Tokyo</span><span class="route-line"></span>
+        <span class="route-stop">Seattle</span>
+      </div>
+    </header>
+
+    <section class="status-card" aria-labelledby="journey-status-heading">
+      <div class="status-grid">
+        <div aria-live="polite">
+          <p class="status-label" id="journey-status-heading">Journey status</p>
+          <h2 class="status-title" id="status-title">Checking the itinerary…</h2>
+          <p class="status-copy" id="status-copy">Matching the current moment to the trip.</p>
+        </div>
+        <div class="clock-grid" aria-label="Live clocks">
+          <div class="clock"><span>Japan · JST</span><strong id="japan-clock">—</strong></div>
+          <div class="clock"><span>Seattle · PT</span><strong id="seattle-clock">—</strong></div>
+        </div>
+      </div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress-bar"></div></div>
+      <div class="status-actions">
+        <button class="primary-button" id="jump-button" type="button">Jump to current plan</button>
+        <p class="timezone-note">Live tracking is daylight-saving aware and uses each stop’s local time zone.</p>
+      </div>
+    </section>
+
+    <div class="itinerary-layout">
+      <nav class="day-nav" aria-label="Jump to a day">
+        <p class="day-nav-title">Trip days</p>
+        <ol class="day-nav-list">
+          <li><a href="#aug-2" data-nav-date="2026-08-02" data-nav-zone="America/Los_Angeles">Aug 2<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-3" data-nav-date="2026-08-03" data-nav-zone="Asia/Tokyo">Aug 3<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-4" data-nav-date="2026-08-04" data-nav-zone="Asia/Tokyo">Aug 4<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-5" data-nav-date="2026-08-05" data-nav-zone="Asia/Tokyo">Aug 5<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-6" data-nav-date="2026-08-06" data-nav-zone="Asia/Tokyo">Aug 6<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-7" data-nav-date="2026-08-07" data-nav-zone="Asia/Tokyo">Aug 7<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-8" data-nav-date="2026-08-08" data-nav-zone="Asia/Tokyo">Aug 8<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-9" data-nav-date="2026-08-09" data-nav-zone="Asia/Tokyo">Aug 9<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-10" data-nav-date="2026-08-10" data-nav-zone="Asia/Tokyo">Aug 10<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-11" data-nav-date="2026-08-11" data-nav-zone="Asia/Tokyo">Aug 11<span class="nav-dot"></span></a></li>
+          <li><a href="#aug-12" data-nav-date="2026-08-12" data-nav-zone="Asia/Tokyo">Aug 12<span class="nav-dot"></span></a></li>
+        </ol>
+      </nav>
+
+      <section class="days" id="itinerary" aria-labelledby="itinerary-heading">
+        <header class="itinerary-heading">
+          <p class="section-kicker">August 2–12, 2026</p>
+          <h2 id="itinerary-heading">The full itinerary</h2>
+          <p>Times are shown in the local time of that day: Pacific time for Seattle departure, then Japan Standard Time after arrival.</p>
+        </header>
+
+        <article class="day-card" id="aug-2" data-day="2026-08-02" data-zone="America/Los_Angeles">
+          <header class="day-header">
+            <div class="date-block"><span>Sun · Aug</span><strong>02</strong></div>
+            <div><h3 class="day-title">Departure</h3><p class="day-place">Seattle → Tokyo</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-02T00:00:00-07:00" data-end="2026-08-03T13:00:00+09:00" data-title="Departure day &amp; flight to Tokyo" data-place="Seattle → Tokyo">
+              <time class="event-time">Departure day · PT</time>
+              <div><h4 class="event-title">Fly nonstop from Seattle to Tokyo</h4><p class="event-copy">Depart Seattle–Tacoma International Airport (SEA) on the direct round-trip flight to Tokyo.</p><div class="detail-chips"><span class="chip">Direct flight</span><span class="chip">SEA → NRT</span></div></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-3" data-day="2026-08-03" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Mon · Aug</span><strong>03</strong></div>
+            <div><h3 class="day-title">Arrival &amp; onward to Kyoto</h3><p class="day-place">Narita → Shinagawa → Kyoto</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-03T13:00:00+09:00" data-end="2026-08-03T17:15:00+09:00" data-title="Arrival, customs &amp; Narita Express" data-place="Narita → Shinagawa">
+              <time class="event-time">Afternoon · JST</time>
+              <div><h4 class="event-title">Arrive, clear customs &amp; take the N’EX</h4><p class="event-copy">Take the Narita Express directly from Narita Airport to Shinagawa Station.</p><div class="detail-chips"><span class="chip">Flexible window</span><span class="chip">Narita Express</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-03T18:07:00+09:00" data-end="2026-08-03T20:15:00+09:00" data-title="Nozomi 277 to Kyoto" data-place="Shinagawa → Kyoto">
+              <time class="event-time">6:07–8:15 PM · JST</time>
+              <div><h4 class="event-title">Shinkansen to Kyoto</h4><p class="event-copy">Ride Nozomi 277 from Shinagawa Station to Kyoto Station.</p><div class="detail-chips"><span class="chip">Car 12</span><span class="chip">Seats 5-D &amp; 5-E</span><span class="chip">Ordinary · right/window side</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-03T20:15:00+09:00" data-end="2026-08-03T23:59:59+09:00" data-title="Arrive in Kyoto" data-place="Kyoto">
+              <time class="event-time">From 8:15 PM · JST</time>
+              <div><h4 class="event-title">Arrive in Kyoto</h4><p class="event-copy">Settle in for the first night in Kyoto.</p></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-4" data-day="2026-08-04" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Tue · Aug</span><strong>04</strong></div>
+            <div><h3 class="day-title">Kyoto &amp; Nara tour</h3><p class="day-place">Kyoto &amp; Nara</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-04T08:00:00+09:00" data-end="2026-08-04T17:00:00+09:00" data-title="Private Kyoto &amp; Nara tour" data-place="Kyoto &amp; Nara">
+              <time class="event-time">8:00 AM · JST</time>
+              <div><h4 class="event-title">Private guided day tour</h4><p class="event-copy">A full day exploring Kyoto and Nara with a private guide.</p><div class="detail-chips"><span class="chip">Approx. end time</span><span class="chip">Private guide</span></div></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-5" data-day="2026-08-05" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Wed · Aug</span><strong>05</strong></div>
+            <div><h3 class="day-title">Osaka day trip</h3><p class="day-place">Kyoto → Osaka → Kyoto</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-05T11:00:00+09:00" data-end="2026-08-05T12:15:00+09:00" data-title="Travel to Osaka Castle Park" data-place="Kyoto → Osaka">
+              <time class="event-time">11:00 AM–12:15 PM</time>
+              <div><h4 class="event-title">Depart Hotel Gracery Kyoto Sanjo</h4><p class="event-copy">A relaxed morning start, then travel to Osaka Castle Park.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-05T12:15:00+09:00" data-end="2026-08-05T13:15:00+09:00" data-title="Osaka Castle Park" data-place="Osaka">
+              <time class="event-time">12:15–1:15 PM</time>
+              <div><h4 class="event-title">Osaka Castle Park</h4><p class="event-copy">Take a quick walk around the grounds and stop for photos.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-05T13:30:00+09:00" data-end="2026-08-05T15:30:00+09:00" data-title="Lunch &amp; shopping in Shinsaibashi" data-place="Shinsaibashi">
+              <time class="event-time">1:30–3:30 PM</time>
+              <div><h4 class="event-title">Shinsaibashi lunch &amp; shopping</h4><p class="event-copy">Enjoy lunch, then browse the neighborhood while walking off the meal.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-05T15:30:00+09:00" data-end="2026-08-05T17:00:00+09:00" data-title="Dessert at Cinnamoroll Cafe" data-place="Osaka">
+              <time class="event-time">3:30–5:00 PM</time>
+              <div><h4 class="event-title">Cinnamoroll Cafe</h4><p class="event-copy">Afternoon dessert and tea once appetites have naturally returned.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-05T17:00:00+09:00" data-end="2026-08-05T20:30:00+09:00" data-title="Dotonbori at night" data-place="Dotonbori">
+              <time class="event-time">5:00–8:30 PM</time>
+              <div><h4 class="event-title">Neon &amp; street food in Dotonbori</h4><p class="event-copy">See the district light up after dark and explore its famous street-food scene.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-05T20:30:00+09:00" data-end="2026-08-05T21:15:00+09:00" data-title="Return to Kyoto" data-place="Osaka → Kyoto">
+              <time class="event-time">8:30–9:15 PM</time>
+              <div><h4 class="event-title">Head back to Kyoto</h4><p class="event-copy">Return to the hotel after the Osaka day trip.</p></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-6" data-day="2026-08-06" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Thu · Aug</span><strong>06</strong></div>
+            <div><h3 class="day-title">Kyoto, photos &amp; anniversary dinner</h3><p class="day-place">Kyoto</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-06T10:00:00+09:00" data-end="2026-08-06T12:00:00+09:00" data-title="Kimono photo shoot" data-place="Kyoto">
+              <time class="event-time">10:00 AM · JST</time>
+              <div><h4 class="event-title">Kimono photo shoot</h4><p class="event-copy">Start the day dressed for a special Kyoto photo session.</p><div class="detail-chips"><span class="chip">Approx. end time</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-06T12:00:00+09:00" data-end="2026-08-06T17:30:00+09:00" data-title="Kyoto exploration &amp; shrine visit" data-place="Kyoto">
+              <time class="event-time">Afternoon · JST</time>
+              <div><h4 class="event-title">Nishiki Tenmangu &amp; Kyoto exploration</h4><p class="event-copy">Visit the shrine to look for Sanrio amulets and omamori, with sightseeing and cultural exploration around Kyoto.</p><div class="detail-chips"><span class="chip">Flexible window</span><span class="chip">Sanrio omamori</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-06T18:00:00+09:00" data-end="2026-08-06T20:00:00+09:00" data-title="Anniversary Wagyu dinner" data-place="Kyoto">
+              <time class="event-time">6:00 PM · JST</time>
+              <div><h4 class="event-title">Anniversary Wagyu / Kobe beef dinner</h4><p class="event-copy">Celebrate with a high-end counter-seating dinner.</p><div class="detail-chips"><span class="chip">Anniversary</span><span class="chip">Approx. end time</span></div></div>
+            </li>
+            <li class="event">
+              <time class="event-time">Remaining day</time>
+              <div><h4 class="event-title">Kyoto sightseeing</h4><p class="event-copy">Use the open time for more cultural exploration around the city.</p></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-7" data-day="2026-08-07" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Fri · Aug</span><strong>07</strong></div>
+            <div><h3 class="day-title">Tokyo arrival, glasses &amp; duck ramen</h3><p class="day-place">Kyoto → Shinjuku</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-07T11:01:00+09:00" data-end="2026-08-07T13:15:00+09:00" data-title="Nozomi 12 to Tokyo" data-place="Kyoto → Tokyo">
+              <time class="event-time">11:01 AM–1:15 PM</time>
+              <div><h4 class="event-title">Shinkansen to Tokyo</h4><p class="event-copy">Ride Nozomi 12 from Kyoto Station to Tokyo.</p><div class="detail-chips"><span class="chip">Car 13</span><span class="chip">Seats 6-D &amp; 6-E</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-07T13:45:00+09:00" data-end="2026-08-07T14:15:00+09:00" data-title="JR transfer to Shinjuku" data-place="Tokyo → Shinjuku">
+              <time class="event-time">1:45–2:15 PM</time>
+              <div><h4 class="event-title">Transfer to Shinjuku</h4><p class="event-copy">Take the JR Line straight to Shinjuku Station.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-07T14:30:00+09:00" data-end="2026-08-07T15:00:00+09:00" data-title="Hotel check-in" data-place="Shinjuku">
+              <time class="event-time">2:30–3:00 PM</time>
+              <div><h4 class="event-title">Check in &amp; refresh</h4><p class="event-copy">Settle in at JR Kyushu Hotel Blossom Shinjuku.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-07T15:15:00+09:00" data-end="2026-08-07T16:15:00+09:00" data-title="Eye exam &amp; glasses order at JINS" data-place="LUMINE EST Shinjuku">
+              <time class="event-time">3:15–4:15 PM</time>
+              <div><h4 class="event-title">JINS eye exam &amp; glasses order</h4><p class="event-copy">Walk to JINS inside LUMINE EST Shinjuku for an eye exam and prescription glasses order.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-07T16:30:00+09:00" data-end="2026-08-07T17:30:00+09:00" data-title="Duck ramen dinner" data-place="LUMINE Shinjuku B1F">
+              <time class="event-time">4:30–5:30 PM</time>
+              <div><h4 class="event-title">Early duck ramen dinner</h4><p class="event-copy">Eat at Ramen Kamo to Negi EATo Lumine Shinjuku, B1F inside Shinjuku Station.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-07T17:30:00+09:00" data-end="2026-08-07T18:30:00+09:00" data-title="Browse, pick up glasses &amp; return" data-place="Shinjuku">
+              <time class="event-time">5:30–6:30 PM</time>
+              <div><h4 class="event-title">Browse while the lenses are prepared</h4><p class="event-copy">Explore LUMINE or Takashimaya Times Square, pick up the finished glasses, then return to the hotel.</p></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-8" data-day="2026-08-08" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Sat · Aug</span><strong>08</strong></div>
+            <div><h3 class="day-title">Shinjuku shopping &amp; Ginza feast</h3><p class="day-place">Shinjuku → Ginza</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-08T11:00:00+09:00" data-end="2026-08-08T18:30:00+09:00" data-title="Shopping around Shinjuku" data-place="Shinjuku">
+              <time class="event-time">11:00 AM–6:30 PM</time>
+              <div><h4 class="event-title">Unhurried Shinjuku shopping</h4><p class="event-copy">Explore Isetan, Hands, Takashimaya Times Square or local boutiques.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-08T18:45:00+09:00" data-end="2026-08-08T19:15:00+09:00" data-title="Subway to Ginza" data-place="Shinjuku → Ginza">
+              <time class="event-time">6:45–7:15 PM</time>
+              <div><h4 class="event-title">Marunouchi Line to Ginza</h4><p class="event-copy">Take the subway from Shinjuku Station; the ride is about 15–20 minutes.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-08T19:30:00+09:00" data-end="2026-08-08T21:30:00+09:00" data-title="Ginza Happo feast" data-place="Ginza">
+              <time class="event-time">7:30–9:30 PM</time>
+              <div><h4 class="event-title">Ginza Happo all-you-can-eat feast</h4><p class="event-copy">Snow crab, king crab, raw oysters, Wagyu yakiniku and sushi.</p><div class="detail-chips"><span class="chip">2-hour seating</span><span class="chip">Seafood &amp; Wagyu</span></div></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-9" data-day="2026-08-09" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Sun · Aug</span><strong>09</strong></div>
+            <div><h3 class="day-title">Shibuya, Harajuku &amp; Akihabara</h3><p class="day-place">Tokyo</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-09T10:30:00+09:00" data-end="2026-08-09T12:30:00+09:00" data-title="Shibuya shopping" data-place="Shibuya">
+              <time class="event-time">10:30 AM–12:30 PM</time>
+              <div><h4 class="event-title">Shibuya shopping</h4><p class="event-copy">Visit Shibuya PARCO for Nintendo Tokyo and Pokémon Center, Shibuya Scramble Square, or MEGA Don Quijote.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-09T12:30:00+09:00" data-end="2026-08-09T13:30:00+09:00" data-title="Togo Shrine Sanrio charms" data-place="Harajuku">
+              <time class="event-time">12:30–1:30 PM</time>
+              <div><h4 class="event-title">Togo Shrine for Sanrio charms</h4><p class="event-copy">Walk or ride to Harajuku, step off Takeshita Street and pick up official Hello Kitty / My Melody omamori.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-09T13:30:00+09:00" data-end="2026-08-09T15:30:00+09:00" data-title="Takeshita Street &amp; Cat Street" data-place="Harajuku">
+              <time class="event-time">1:30–3:30 PM</time>
+              <div><h4 class="event-title">Explore Harajuku</h4><p class="event-copy">Wander Takeshita Street and Cat Street.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-09T15:30:00+09:00" data-end="2026-08-09T18:30:00+09:00" data-title="Akihabara arcades &amp; gashapon" data-place="Akihabara">
+              <time class="event-time">3:30–6:30 PM</time>
+              <div><h4 class="event-title">Akihabara pedestrian street &amp; arcades</h4><p class="event-copy">Take the JR Line for vehicle-free Chuo-dori, multi-floor arcades like namco and GiGO, and Akihabara Gachapon Kaikan.</p></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-10" data-day="2026-08-10" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Mon · Aug</span><strong>10</strong></div>
+            <div><h3 class="day-title">Digital art &amp; bay sunset cruise</h3><p class="day-place">Shinjuku → Toyosu → Hinode</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-10T10:30:00+09:00" data-end="2026-08-10T11:15:00+09:00" data-title="Travel to teamLab" data-place="Shinjuku → Toyosu">
+              <time class="event-time">10:30–11:15 AM</time>
+              <div><h4 class="event-title">Travel to teamLab</h4><p class="event-copy">Leave JR Kyushu Hotel Blossom Shinjuku for the 35–45 minute trip.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-10T11:30:00+09:00" data-end="2026-08-10T13:30:00+09:00" data-title="teamLab exhibition" data-place="Toyosu">
+              <time class="event-time">11:30 AM–1:30 PM</time>
+              <div><h4 class="event-title">Explore teamLab</h4><p class="event-copy">Spend about two hours inside the digital art exhibition.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-10T13:30:00+09:00" data-end="2026-08-10T15:00:00+09:00" data-title="Lunch near Toyosu" data-place="Toyosu">
+              <time class="event-time">1:30–3:00 PM</time>
+              <div><h4 class="event-title">Lunch &amp; recharge</h4><p class="event-copy">Eat around Toyosu Market or at a nearby cafe, then relax.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-10T15:00:00+09:00" data-end="2026-08-10T15:30:00+09:00" data-title="Yurikamome to Hinode Pier" data-place="Shin-Toyosu → Hinode">
+              <time class="event-time">3:00–3:30 PM</time>
+              <div><h4 class="event-title">Travel to Hinode Pier</h4><p class="event-copy">Take the Yurikamome Line, about 24 minutes direct from Shin-Toyosu to Hinode Station.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-10T15:50:00+09:00" data-end="2026-08-10T16:20:00+09:00" data-title="Cruise check-in &amp; boarding" data-place="Hinode Pier">
+              <time class="event-time">3:50–4:20 PM</time>
+              <div><h4 class="event-title">Check in &amp; board The Symphony</h4><p class="event-copy">Check in at the HINODE PIER SYMPHONY COUNTER at 3:50 PM; boarding runs until 4:20 PM.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-10T16:20:00+09:00" data-end="2026-08-10T18:20:00+09:00" data-title="Tokyo Bay sunset cruise" data-place="Tokyo Bay">
+              <time class="event-time">4:20–6:20 PM</time>
+              <div><h4 class="event-title">Sunset cruise aboard The Symphony</h4><p class="event-copy">Cruise Tokyo Bay with all-you-can-drink beer and cocktails.</p><div class="detail-chips"><span class="chip">The Symphony</span><span class="chip">Drinks included</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-10T18:20:00+09:00" data-end="2026-08-10T23:59:59+09:00" data-title="Waterfront dinner or return to Shinjuku" data-place="Hinode / Shinjuku">
+              <time class="event-time">From 6:20 PM</time>
+              <div><h4 class="event-title">Evening at your own pace</h4><p class="event-copy">Disembark at Hinode Pier, then head back to Shinjuku or explore a waterfront spot for dinner.</p><div class="detail-chips"><span class="chip">Flexible</span></div></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-11" data-day="2026-08-11" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Tue · Aug</span><strong>11</strong></div>
+            <div><h3 class="day-title">Craft culture, sumo &amp; bonus Akihabara</h3><p class="day-place">Asakusa → Ryogoku → Shinjuku</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-11T10:00:00+09:00" data-end="2026-08-11T11:00:00+09:00" data-title="Knife craft &amp; sharpening workshop" data-place="ZEN Studio · Asakusa">
+              <time class="event-time">10:00–11:00 AM</time>
+              <div><h4 class="event-title">Knife craft &amp; sharpening workshop</h4><p class="event-copy">A hands-on session at ZEN Studio in Asakusa.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-11T11:00:00+09:00" data-end="2026-08-11T14:15:00+09:00" data-title="Senso-ji, Nakamise &amp; optional Akihabara" data-place="Asakusa / Akihabara">
+              <time class="event-time">11:00 AM–2:15 PM</time>
+              <div><h4 class="event-title">Senso-ji &amp; Nakamise Street</h4><p class="event-copy">Stroll the temple and market street. Optionally hop to Akihabara for a one-hour arcade and gashapon run without the weekend crowds.</p><div class="detail-chips"><span class="chip">Optional Akihabara detour</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-11T14:30:00+09:00" data-end="2026-08-11T16:30:00+09:00" data-title="SUMOLAND &amp; chanko nabe" data-place="Ryogoku">
+              <time class="event-time">2:30–4:30 PM</time>
+              <div><h4 class="event-title">SUMOLAND interactive show</h4><p class="event-copy">Enjoy the sumo experience and chanko nabe in Ryogoku.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-11T16:30:00+09:00" data-end="2026-08-11T23:59:59+09:00" data-title="Final shopping, packing &amp; relaxed evening" data-place="Shinjuku">
+              <time class="event-time">From 4:30 PM</time>
+              <div><h4 class="event-title">Final evening in Shinjuku</h4><p class="event-copy">Return for souvenir shopping, packing and a relaxed final night.</p></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="day-card" id="aug-12" data-day="2026-08-12" data-zone="Asia/Tokyo">
+          <header class="day-header">
+            <div class="date-block"><span>Wed · Aug</span><strong>12</strong></div>
+            <div><h3 class="day-title">Airport departure &amp; duty-free</h3><p class="day-place">Shinjuku → Narita → Seattle</p></div>
+          </header>
+          <ol class="schedule">
+            <li class="event" data-start="2026-08-12T08:30:00+09:00" data-end="2026-08-12T12:20:00+09:00" data-title="Breakfast, final pack &amp; check-out" data-place="Shinjuku">
+              <time class="event-time">8:30 AM–12:20 PM</time>
+              <div><h4 class="event-title">A relaxed final morning</h4><p class="event-copy">Have breakfast, finish packing and check out of the hotel.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-12T12:20:00+09:00" data-end="2026-08-12T12:30:00+09:00" data-title="Walk to Shinjuku Station" data-place="Shinjuku">
+              <time class="event-time">12:20–12:30 PM</time>
+              <div><h4 class="event-title">Walk to the Narita Express platforms</h4><p class="event-copy">The station is a short 3–5 minute walk from JR Kyushu Hotel Blossom Shinjuku.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-12T13:08:00+09:00" data-end="2026-08-12T14:27:00+09:00" data-title="Narita Express 29" data-place="Shinjuku → Narita Terminal 2·3">
+              <time class="event-time">1:08–2:27 PM</time>
+              <div><h4 class="event-title">Narita Express 29 to the airport</h4><p class="event-copy">Ride directly from Shinjuku Station to Narita Airport Terminal 2·3.</p><div class="detail-chips"><span class="chip">N’EX 29</span><span class="chip">Terminal 2·3</span></div></div>
+            </li>
+            <li class="event" data-start="2026-08-12T14:27:00+09:00" data-end="2026-08-12T17:45:00+09:00" data-title="Check-in, security &amp; duty-free shopping" data-place="Narita Airport">
+              <time class="event-time">2:27–5:45 PM</time>
+              <div><h4 class="event-title">Airport &amp; duty-free shopping</h4><p class="event-copy">Check in, clear security and leave 1½–2 hours for snacks, cosmetics and souvenirs.</p></div>
+            </li>
+            <li class="event" data-start="2026-08-12T17:45:00+09:00" data-end="2026-08-13T00:00:00-07:00" data-title="Flight home" data-place="Tokyo → Seattle">
+              <time class="event-time">5:45 PM · JST</time>
+              <div><h4 class="event-title">Fly home to Seattle</h4><p class="event-copy">Board the return flight and head home after an incredible trip.</p><div class="detail-chips"><span class="chip">NRT → SEA</span></div></div>
+            </li>
+          </ol>
+        </article>
+
+        <aside class="trip-note">
+          <strong>About live tracking:</strong> exact reservations and stated time ranges are tracked precisely. Broad plans such as “afternoon” use clearly marked planning windows so the page can point to the most likely current activity without changing the original itinerary.
+        </aside>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>Monica &amp; Michael · Japan 2026</p>
+      <p>Seattle · Kyoto · Osaka · Tokyo</p>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const tripStart = new Date("2026-08-02T00:00:00-07:00");
+      const tripEnd = new Date("2026-08-13T00:00:00-07:00");
+      const statusTitle = document.querySelector("#status-title");
+      const statusCopy = document.querySelector("#status-copy");
+      const japanClock = document.querySelector("#japan-clock");
+      const seattleClock = document.querySelector("#seattle-clock");
+      const progressBar = document.querySelector("#progress-bar");
+      const jumpButton = document.querySelector("#jump-button");
+      const dayCards = [...document.querySelectorAll(".day-card")];
+      const navLinks = [...document.querySelectorAll("[data-nav-date]")];
+      const events = [...document.querySelectorAll(".event[data-start]")]
+        .map((element) => ({
+          element,
+          start: new Date(element.dataset.start),
+          end: new Date(element.dataset.end),
+          title: element.dataset.title,
+          place: element.dataset.place
+        }))
+        .sort((a, b) => a.start - b.start);
+
+      const clockFormatter = (timeZone) => new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      const japanFormatter = clockFormatter("Asia/Tokyo");
+      const seattleFormatter = clockFormatter("America/Los_Angeles");
+
+      function localDateKey(date, timeZone) {
+        const parts = new Intl.DateTimeFormat("en-US", {
+          timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        }).formatToParts(date);
+        const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+        return `${values.year}-${values.month}-${values.day}`;
+      }
+
+      function durationText(milliseconds) {
+        const totalMinutes = Math.max(1, Math.ceil(milliseconds / 60000));
+        const days = Math.floor(totalMinutes / 1440);
+        const hours = Math.floor((totalMinutes % 1440) / 60);
+        const minutes = totalMinutes % 60;
+        if (days > 0) return `${days}d ${hours}h`;
+        if (hours > 0) return `${hours}h ${minutes}m`;
+        return `${minutes}m`;
+      }
+
+      function update() {
+        const now = new Date();
+        japanClock.textContent = japanFormatter.format(now);
+        seattleClock.textContent = seattleFormatter.format(now);
+
+        events.forEach(({ element }) => element.classList.remove("is-current"));
+        dayCards.forEach((card) => card.classList.remove("is-today"));
+        navLinks.forEach((link) => link.classList.remove("is-today"));
+
+        const active = events.find((event) => now >= event.start && now < event.end);
+        const next = events.find((event) => event.start > now);
+        const currentDay = dayCards.find((card) => localDateKey(now, card.dataset.zone) === card.dataset.day);
+        let focusTarget = null;
+
+        if (now < tripStart) {
+          statusTitle.textContent = "The adventure is almost here";
+          statusCopy.textContent = `Departure day begins in ${durationText(tripStart - now)}.`;
+          focusTarget = document.querySelector("#aug-2");
+          jumpButton.textContent = "Jump to departure";
+        } else if (now >= tripEnd) {
+          statusTitle.textContent = "Home from Japan";
+          statusCopy.textContent = "The journey is complete—eleven days of excellent memories.";
+          focusTarget = document.querySelector("#aug-12");
+          jumpButton.textContent = "See the final day";
+        } else if (active) {
+          active.element.classList.add("is-current");
+          statusTitle.textContent = active.title;
+          statusCopy.textContent = `${active.place} · ${durationText(active.end - now)} left in this itinerary block.`;
+          focusTarget = active.element.closest(".day-card");
+          jumpButton.textContent = "Jump to current plan";
+        } else if (next) {
+          const nextDay = next.element.closest(".day-card");
+          statusTitle.textContent = currentDay && currentDay !== nextDay ? "Today’s plans are wrapped" : "A little breathing room";
+          statusCopy.textContent = `Up next: ${next.title} in ${durationText(next.start - now)}.`;
+          focusTarget = currentDay || nextDay;
+          jumpButton.textContent = currentDay && currentDay !== nextDay ? "Review today" : "Jump to what’s next";
+        }
+
+        if (focusTarget) {
+          focusTarget.classList.add("is-today");
+          const link = document.querySelector(`a[href="#${focusTarget.id}"]`);
+          if (link) link.classList.add("is-today");
+        } else {
+          dayCards.forEach((card) => {
+            if (localDateKey(now, card.dataset.zone) === card.dataset.day) card.classList.add("is-today");
+          });
+          navLinks.forEach((link) => {
+            if (localDateKey(now, link.dataset.navZone) === link.dataset.navDate) link.classList.add("is-today");
+          });
+        }
+
+        const progress = Math.min(1, Math.max(0, (now - tripStart) / (tripEnd - tripStart)));
+        progressBar.style.width = `${progress * 100}%`;
+        jumpButton.onclick = () => focusTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      update();
+      window.setInterval(update, 1000);
+    })();
+  </script>
+</body>
+</html>

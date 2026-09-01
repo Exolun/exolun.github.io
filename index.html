@@ -1,49 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Michael Smith's site hub for resume content, games, and experiments.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Michael Smith, a software engineer building collaboration software, AI-powered systems, developer tooling, and full-stack applications.">
+  <link rel="canonical" href="https://mikelikescoding.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mikelikescoding.com/">
+  <meta property="og:title" content="Michael Smith">
+  <meta property="og:description" content="Software engineer building collaboration software, AI-powered systems, developer tooling, and full-stack applications.">
+  <meta property="og:image" content="https://mikelikescoding.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Michael Smith — Software engineer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Michael Smith">
+  <meta name="twitter:description" content="Software engineer building collaboration software, AI-powered systems, developer tooling, and full-stack applications.">
+  <meta name="twitter:image" content="https://mikelikescoding.com/og.png">
+  <meta name="twitter:image:alt" content="Michael Smith — Software engineer">
   <title>Michael Smith</title>
-  <link rel="stylesheet" href="shared/css/hub.css">
+  <link rel="stylesheet" href="shared/css/portfolio.css">
 </head>
 <body>
-  <main class="site-shell">
-    <section class="hero">
-      <p class="eyebrow">Site Home</p>
-      <h1>Michael Smith</h1>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Michael Smith home">
+      <span class="brand-mark" aria-hidden="true">MS</span>
+      <span class="brand-copy">Michael Smith<small>Software engineer</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="resume/">Resume</a>
+      <a class="nav-cta" href="https://www.linkedin.com/in/michael-smith-aa573324/">LinkedIn ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="home-hero wrap">
+      <div class="home-hero-copy">
+        <p class="eyebrow">Software engineer · Redmond, Washington</p>
+        <h1>Michael Smith</h1>
+        <p class="home-intro">
+          Software engineer with 15+ years of experience building collaboration software,
+          AI-powered systems, developer tooling, and full-stack applications across Microsoft
+          and consulting environments.
+        </p>
+        <div class="button-row">
+          <a class="button" href="resume/">View resume <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <aside class="home-hero-card home-focus-card" aria-label="Professional overview">
+        <div class="detail-block">
+          <p class="detail-label">Current role</p>
+          <p class="detail-value">Software Engineer II at Microsoft</p>
+        </div>
+        <div class="detail-block">
+          <p class="detail-label">Areas I work across</p>
+          <ul class="tag-list">
+            <li>Collaboration software</li>
+            <li>AI-powered systems</li>
+            <li>Developer tooling</li>
+            <li>Full-stack applications</li>
+          </ul>
+        </div>
+      </aside>
     </section>
 
-    <section class="section">
-      <div class="section-header">
-        <h2>Main Areas</h2>
-      </div>
-      <div class="card-grid">
-        <a class="card" href="resume/index.html">
-          <p class="card-label">Professional</p>
-          <h2 class="card-title">Resume</h2>
-          <p class="card-copy">Resume experience, projects, and skills in its own self-contained app folder.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-header">
-        <h2>Kids</h2>
-      </div>
-      <div class="card-grid">
-        <a class="card" href="todo.html">
-          <p class="card-label">Family Fun</p>
-          <h2 class="card-title">To-Do List</h2>
-          <p class="card-copy">Check off adventures, projects, outings, and treats from the family list.</p>
-        </a>
-        <a class="card" href="games/index.html">
-          <p class="card-label">Play</p>
-          <h2 class="card-title">Games</h2>
-          <p class="card-copy">Kid-focused browser games and interactive experiments, starting with Splashman.</p>
-        </a>
-      </div>
+    <section class="personal-pocket wrap" id="family-projects" aria-label="Personal projects">
+      <details>
+        <summary>
+          <span class="pocket-copy">
+            <span class="pocket-label">Off the clock</span>
+            <span class="pocket-title">Pages for the kids</span>
+          </span>
+          <span class="pocket-hint">Peek inside <span class="pocket-toggle" aria-hidden="true">+</span></span>
+        </summary>
+        <div class="pocket-links">
+          <a href="todo.html">
+            <span><strong>Kids’ To-Do List</strong><small>A family activities checklist</small></span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="games/">
+            <span><strong>Splashman &amp; Feedster</strong><small>Word and math browser games for my kids</small></span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </details>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner wrap">
+      <div>
+        <p class="footer-name">Michael Smith</p>
+        <p class="footer-copy">Built in Redmond, Washington.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

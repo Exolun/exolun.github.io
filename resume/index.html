@@ -1,66 +1,194 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Resume site for Michael Smith, Software Engineer II at Microsoft focused on AI systems, developer tooling, and full-stack engineering.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Resume for Michael Smith, Software Engineer II at Microsoft.">
+  <link rel="canonical" href="https://mikelikescoding.com/resume/">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://mikelikescoding.com/resume/">
+  <meta property="og:title" content="Michael Smith | Resume">
+  <meta property="og:description" content="Software engineer with 15+ years of experience building collaboration software, AI-powered systems, developer tooling, and full-stack applications.">
+  <meta property="og:image" content="https://mikelikescoding.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Michael Smith — Software engineer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Michael Smith | Resume">
+  <meta name="twitter:description" content="Software engineer with 15+ years of experience building collaboration software, AI-powered systems, developer tooling, and full-stack applications.">
+  <meta name="twitter:image" content="https://mikelikescoding.com/og.png">
+  <meta name="twitter:image:alt" content="Michael Smith — Software engineer">
   <title>Michael Smith | Resume</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../shared/css/portfolio.css">
 </head>
 <body>
-  <div class="page-shell">
-    <header class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow" id="hero-location"></p>
-        <h1 id="hero-name"></h1>
-        <p class="hero-title" id="hero-headline"></p>
-        <p class="hero-summary" id="hero-summary"></p>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Michael Smith home">
+      <span class="brand-mark" aria-hidden="true">MS</span>
+      <span class="brand-copy">Michael Smith<small>Software engineer</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="../">Home</a>
+      <a href="./" aria-current="page">Resume</a>
+      <a class="nav-cta" href="https://www.linkedin.com/in/michael-smith-aa573324/">LinkedIn ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="resume-hero wrap">
+      <div class="resume-hero-copy">
+        <p class="eyebrow">Redmond, Washington</p>
+        <h1>Michael Smith</h1>
+        <p class="resume-summary">
+          Software engineer with 15+ years of experience building collaboration software,
+          AI-powered systems, developer tooling, and full-stack applications across Microsoft
+          and consulting environments.
+        </p>
       </div>
-      <aside class="hero-card">
-        <div class="hero-card-section">
-          <p class="card-label">Current role</p>
-          <p class="card-value" id="hero-role"></p>
+
+      <aside class="resume-hero-card" aria-label="Resume overview">
+        <div class="detail-block">
+          <p class="detail-label">Current role</p>
+          <p class="detail-value">Software Engineer II at Microsoft</p>
         </div>
-        <div class="hero-card-section">
-          <p class="card-label">Focus</p>
-          <ul class="tag-list" id="hero-focus"></ul>
-        </div>
-        <div class="hero-card-section">
-          <p class="card-label">Links</p>
-          <ul class="link-list" id="hero-links"></ul>
+        <div class="detail-block">
+          <p class="detail-label">Focus</p>
+          <ul class="tag-list">
+            <li>Agentic AI systems</li>
+            <li>Tool calling</li>
+            <li>Responsible AI</li>
+            <li>Full-stack platforms</li>
+          </ul>
         </div>
       </aside>
-    </header>
+    </section>
 
-    <main class="content-grid">
-      <section class="content-panel section-summary">
-        <h2>Profile</h2>
-        <div id="profile-points" class="bullet-list"></div>
-      </section>
+    <div class="resume-layout wrap">
+      <div class="resume-main">
+        <section class="content-panel" aria-labelledby="experience-title">
+          <div class="panel-heading">
+            <h2 id="experience-title">Experience</h2>
+            <span>2011 — Present</span>
+          </div>
+          <div class="experience-list">
+            <article class="experience-card">
+              <div class="experience-period">Jan 2017 — Present</div>
+              <div>
+                <h3>Software Engineer II</h3>
+                <p class="company">Microsoft</p>
+                <p class="location">Redmond, WA</p>
+                <ul>
+                  <li>Working on Project LIFT, a real-time voice modality for Facilitator in Teams now entering Private Preview.</li>
+                  <li>Implemented server-side and client-side service integrations for the tool-calling system so skills can retrieve data from Microsoft systems.</li>
+                  <li>Built the app authentication layer that allows the bot to communicate securely with connected services.</li>
+                  <li>Built the human-in-the-loop approval flow for skills that require permission before execution.</li>
+                  <li>Served as the sole engineer responsible for Responsible AI compliance and evaluation coverage for the system.</li>
+                  <li>Built and iterated on an evaluation framework that executes 1,000+ safety tests to validate releases and support compliance requirements.</li>
+                  <li>Developed coverage across personal harms, hallucination and grounding quality, jailbreak attempts, prompt injection, and tool misuse scenarios.</li>
+                  <li>Previously contributed across Teams, Mesh, and SharePoint Spaces on collaboration features, tooling, build automation, and cross-system integration.</li>
+                </ul>
+              </div>
+            </article>
 
-      <section class="content-panel section-experience">
-        <h2>Experience</h2>
-        <div id="experience-list" class="timeline"></div>
-      </section>
+            <article class="experience-card">
+              <div class="experience-period">Mar 2014 — Dec 2016</div>
+              <div>
+                <h3>Senior Software Engineer</h3>
+                <p class="company">Affirma Consulting</p>
+                <p class="location">Bellevue, WA</p>
+                <ul>
+                  <li>Served as a development lead for custom software projects.</li>
+                  <li>Designed technical solutions, assigned work, mentored junior developers, and provided delivery estimates for sales and project planning.</li>
+                  <li>Built applications for clients across a range of business domains and technical stacks.</li>
+                </ul>
+              </div>
+            </article>
 
-      <section class="content-panel section-projects">
-        <h2>Selected Projects</h2>
-        <div id="project-list" class="stack-list"></div>
-      </section>
+            <article class="experience-card">
+              <div class="experience-period">Jul 2011 — Mar 2014</div>
+              <div>
+                <h3>Software Development Consultant</h3>
+                <p class="company">Microsoft</p>
+                <p class="location">Seattle, WA</p>
+                <ul>
+                  <li>Provided technical leadership and software engineering on custom application work for Fortune 500 companies.</li>
+                  <li>Delivered solutions in close partnership with Microsoft stakeholders and enterprise customers.</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
 
-      <section class="content-panel section-skills">
-        <h2>Skills</h2>
-        <div id="skill-groups" class="skill-groups"></div>
-      </section>
+        <section class="content-panel" aria-labelledby="projects-title">
+          <div class="panel-heading">
+            <h2 id="projects-title">Selected Projects</h2>
+            <span>Microsoft Global Hackathon</span>
+          </div>
+          <div class="project-list">
+            <article class="project-card">
+              <div class="project-head"><h3>Agentic Copilot</h3><span class="project-period">2025</span></div>
+              <p class="project-subtitle">Microsoft Global Hackathon</p>
+              <p>Ideated, architected, and led a hackathon project focused on agentic AI experiences, coordinating a team of 5–8 engineers and building a solution spanning C# web services and a React front end.</p>
+            </article>
+            <article class="project-card">
+              <div class="project-head"><h3>SiteBuilder Copilot</h3><span class="project-period">2024</span></div>
+              <p class="project-subtitle">Microsoft Global Hackathon</p>
+              <p>Led a team of 5–8 engineers on a generative AI website builder concept, creating initial scaffolding and contributing to a Python and TypeScript implementation.</p>
+            </article>
+          </div>
+        </section>
+      </div>
 
-      <section class="content-panel section-education">
-        <h2>Education</h2>
-        <div id="education-list" class="stack-list"></div>
-      </section>
-    </main>
-  </div>
+      <aside class="resume-sidebar" aria-label="Skills and education">
+        <section class="sidebar-panel">
+          <h2>Skills</h2>
+          <div class="skill-group">
+            <h3>Languages and Frameworks</h3>
+            <ul class="chip-list">
+              <li>TypeScript</li><li>C#</li><li>Python</li><li>React</li><li>ASP.NET</li><li>PowerShell</li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3>AI and Platform</h3>
+            <ul class="chip-list">
+              <li>Azure OpenAI</li><li>OpenAI API</li><li>Prompt Engineering</li><li>AI Evaluation</li><li>Responsible AI</li><li>Tool Calling</li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3>Product and Systems</h3>
+            <ul class="chip-list">
+              <li>Full-stack Development</li><li>Developer Tooling</li><li>Human-in-the-Loop Systems</li><li>Multimodal AI</li><li>Agentic AI Systems</li><li>Unity</li>
+            </ul>
+          </div>
+        </section>
 
-  <script src="data/resume-data.js"></script>
-  <script src="app.js"></script>
+        <section class="sidebar-panel">
+          <h2>Education</h2>
+          <div class="education-stack">
+            <article class="education-card">
+              <div class="education-head"><h3>Vermont Technical College</h3><span class="education-period">2007 — 2011</span></div>
+              <p><strong>Bachelor’s degree, Computer Software Engineering</strong></p>
+              <p>Cum Laude, Dean’s List</p>
+            </article>
+            <article class="education-card">
+              <div class="education-head"><h3>Vermont Technical College</h3><span class="education-period">2007 — 2011</span></div>
+              <p><strong>Bachelor’s degree, Information Technology</strong></p>
+            </article>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner wrap">
+      <div>
+        <p class="footer-name">Michael Smith</p>
+        <p class="footer-copy">Software engineer · Redmond, Washington</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

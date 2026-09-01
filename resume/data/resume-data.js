@@ -38,7 +38,7 @@ window.resumeData = {
       start: "Jan 2017",
       end: "Present",
       bullets: [
-        "Working on Project LIFT, a real-time voice modality for Facilitator in Teams now entering Private Preview.",
+        "Working on a real-time voice AI for Facilitator in Teams that’s currently in Early Access.",
         "Implemented server-side and client-side service integrations for the tool-calling system so skills can retrieve data from Microsoft systems.",
         "Built the app authentication layer that allows the bot to communicate securely with connected services.",
         "Built the human-in-the-loop approval flow for skills that require permission before execution.",
